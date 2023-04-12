@@ -18,6 +18,7 @@ score = 0
 explosion_duration = 50
 bullet_img = pg.image.load( 'assets/bullet.png' )
 font_std = pg.font.Font('assets/font.ttf', 25 )
+bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
 
 # display size, name, icon
 screen = pg.display.set_mode( ( display_width, display_height ) )
@@ -114,7 +115,7 @@ while running:
     if pl.y > display_height - pl.size: pl.y = display_height - pl.size
     
     # draw things
-    screen.fill( ( 38, 53, 128 ) )
+    screen.blit( bg_img, ( 0, 0 ) )
     for zep in airships:
         if not zep.dead: zep.draw()
     for blt in bullets: blt.draw()
