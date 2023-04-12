@@ -10,9 +10,10 @@ from explosion import Explosion
 pg.init()
 
 # environemnent
+info = pg.display.Info()
 running = True
-display_width = 1000
-display_height = 700
+display_width = info.current_w
+display_height = info.current_h - 50
 score = 0
 explosion_duration = 50
 bullet_img = pg.image.load( 'assets/bullet.png' )
@@ -35,7 +36,7 @@ zep_img = pg.image.load( 'assets/zeppelin.png' )
 airships: List[ Zeppelin ] = []
 num_zep = rn.randint( 2, 5 )
 for i in range( num_zep ):
-    zep = Zeppelin( zep_img, screen )
+    zep = Zeppelin( zep_img, screen, display_width, display_height )
     airships.append( zep )
 
 # bullet
@@ -51,12 +52,12 @@ explosions: List[ Explosion ] = []
 def display_score():
     score_string = 'score: ' + str(score)
     text_surface = font_std.render( score_string, True, (220,220,220) )
-    screen.blit( text_surface, (20, 0) )
+    screen.blit( text_surface, (20, 10) )
 
 def display_stats():
     speed_string = 'speed: ' + str( int( np.round(pl.speed * 1000, -1) ) )
     text_surface = font_std.render( speed_string, True, (220,220,220) )
-    screen.blit( text_surface, (900,650) )
+    screen.blit( text_surface, (display_width-100,display_height-50) )
 
 # game loop
 while running:
@@ -89,7 +90,7 @@ while running:
         blt_rect = pg.Rect( blt.position[ 0 ], blt.position[ 1 ], 4, 4 )
         for zep in airships:
             if not zep.dead:
-                zep_rect = pg.Rect( zep.x, zep.y, 64, 64 )
+                zep_rect = pg.Rect( zep.x + 5, zep.y + 5, 54, 54 )
                 if pg.Rect.colliderect( blt_rect, zep_rect ):
                     zep.hit()
                     bullets.remove( blt )
