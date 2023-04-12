@@ -88,13 +88,14 @@ while running:
         blt.position += blt.delta
         blt_rect = pg.Rect( blt.position[ 0 ], blt.position[ 1 ], 4, 4 )
         for zep in airships:
-            zep_rect = pg.Rect( zep.x, zep.y, 64, 64 )
-            if pg.Rect.colliderect( blt_rect, zep_rect ):
-                zep.hit()
-                bullets.remove( blt )
-                if zep.dead is True:
-                    expl = Explosion( zep.x, zep.y, explosion_img, screen )
-                    explosions.append( expl )
+            if not zep.dead:
+                zep_rect = pg.Rect( zep.x, zep.y, 64, 64 )
+                if pg.Rect.colliderect( blt_rect, zep_rect ):
+                    zep.hit()
+                    bullets.remove( blt )
+                    if zep.dead is True:
+                        expl = Explosion( zep.x, zep.y, explosion_img, screen )
+                        explosions.append( expl )
 
     pl.angle += pl.rotation
 
@@ -115,9 +116,11 @@ while running:
     screen.fill( ( 38, 53, 128 ) )
     for zep in airships:
         if not zep.dead: zep.draw()
-        else: expl.draw()
     for blt in bullets: blt.draw()
-    for expl in explosions: expl.draw()
+    for expl in explosions:
+        if expl.visible:
+            if expl.timer < expl.duration: expl.draw()
+            expl.timer += 1
     pl.draw()
     display_score()
     display_stats()

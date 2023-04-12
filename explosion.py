@@ -7,6 +7,9 @@ class Explosion:
         self.y = y
         self.img = img
         self.screen = screen
+        self.visible = True
+        self.timer = 0
+        self.duration = 100
 
     def draw( self ):
         self.screen.blit( self.img, ( self.x, self.y ) )
