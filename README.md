@@ -14,4 +14,5 @@ S or Down to decrease speed
 Space or Left Shift to shoot a single bullet
 
 Several airships are spawned with random coordinates and rotation, once hit five times by a bullet, they explode.
-TODO: Make the explosion disappear after a certain amount of time
+TODO: add an option to win/lose the game
+hard TODO: add a semi-intelligent oponent plane
