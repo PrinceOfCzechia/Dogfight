@@ -1,5 +1,6 @@
 import pygame as pg
 import numpy as np
+import random as rn
 from typing import List
 from player import Player
 from bullet import Bullet
@@ -31,14 +32,19 @@ pl = Player( player_x, player_y, player_img, screen )
 
 # zeppelin
 zep_img = pg.image.load( 'assets/zeppelin.png' )
-zep = Zeppelin( 400, 200, zep_img, screen )
+airships: List[ Zeppelin ] = []
+num_zep = rn.randint( 2, 5 )
+for i in range( num_zep ):
+    zep = Zeppelin( zep_img, screen )
+    airships.append( zep )
 
 # bullet
-bullet_img = pg.transform.scale( pg.image.load( 'assets/bullet.png' ), ( 4, 4 ) )
+bullet_img = pg.transform.scale( pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) )
 bullets: List[ Bullet ] = []
 
 #explosion
 explosion_img = pg.image.load( 'assets/explosion.png' )
+explosions: List[ Explosion ] = []
 
 
 # write things
@@ -81,14 +87,14 @@ while running:
     for blt in bullets:
         blt.position += blt.delta
         blt_rect = pg.Rect( blt.position[ 0 ], blt.position[ 1 ], 4, 4 )
-        zep_rect = pg.Rect( zep.position[ 0 ], zep.position[ 1 ], 64, 64 )
-        if pg.Rect.colliderect( blt_rect, zep_rect ):
-            zep.hit()
-            bullets.remove( blt )
-            if zep.dead is True:
-                expl = Explosion( zep.position[ 0 ], zep.position[ 1 ], explosion_img, screen )
-            
-
+        for zep in airships:
+            zep_rect = pg.Rect( zep.x, zep.y, 64, 64 )
+            if pg.Rect.colliderect( blt_rect, zep_rect ):
+                zep.hit()
+                bullets.remove( blt )
+                if zep.dead is True:
+                    expl = Explosion( zep.x, zep.y, explosion_img, screen )
+                    explosions.append( expl )
 
     pl.angle += pl.rotation
 
@@ -106,10 +112,12 @@ while running:
     if pl.y > display_height - pl.size: pl.y = display_height - pl.size
     
     # draw things
-    screen.fill( ( 77, 106, 255 ) )
-    if not zep.dead: zep.draw()
-    else: expl.draw()
+    screen.fill( ( 38, 53, 128 ) )
+    for zep in airships:
+        if not zep.dead: zep.draw()
+        else: expl.draw()
     for blt in bullets: blt.draw()
+    for expl in explosions: expl.draw()
     pl.draw()
     display_score()
     display_stats()
