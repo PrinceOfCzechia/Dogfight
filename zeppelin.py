@@ -3,13 +3,13 @@ import pygame as pg
 import random as rn
 
 class Zeppelin():
-    def __init__( self, img, screen ):
-        self.x = rn.randint( 100, 836 )
-        self.y = rn.randint( 100, 236 )
+    def __init__( self, img, screen, display_w, display_h ):
+        self.x = rn.randint( 100, display_w - 64 )
+        self.y = rn.randint( 100, display_h - 564 )
         self.angle = rn.randint( 0, 359 )
         self.img = img
         self.screen = screen
-        self.hp = 5
+        self.hp = 4
         self.dead = False
 
     def draw( self ):
