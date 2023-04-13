@@ -12,7 +12,7 @@ pg.init()
 
 # environemnent
 info = pg.display.Info()
-mixer = pg.mixer.init()
+pg.mixer.init()
 running = True
 display_width = info.current_w
 display_height = info.current_h - 50
@@ -52,6 +52,10 @@ bullet_sound.set_volume( 0.3 )
 explosion_img = pg.image.load( 'assets/explosion.png' )
 explosions: List[ Explosion ] = []
 explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
+
+# background music
+pg.mixer.music.load( 'assets/bg_music.wav' )
+pg.mixer.music.play( -1, 0.0, 0 )
 
 
 # write things
