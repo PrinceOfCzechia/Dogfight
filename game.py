@@ -6,11 +6,13 @@ from player import Player
 from bullet import Bullet
 from zeppelin import Zeppelin
 from explosion import Explosion
+from enemy import Enemy
 
 pg.init()
 
 # environemnent
 info = pg.display.Info()
+mixer = pg.mixer.init()
 running = True
 display_width = info.current_w
 display_height = info.current_h - 50
@@ -27,7 +29,7 @@ pg.display.set_icon( icon )
 pg.display.set_caption( 'DogeFight' )
 
 # player
-player_img = pg.image.load( 'assets/aircraft.png' )
+player_img = pg.transform.scale( pg.image.load( 'assets/plane.png' ), ( 32, 32 ) )
 player_x = 500.0
 player_y = 600.0
 pl = Player( player_x, player_y, player_img, screen )
@@ -43,10 +45,13 @@ for i in range( num_zep ):
 # bullet
 bullet_img = pg.transform.scale( pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) )
 bullets: List[ Bullet ] = []
+bullet_sound = pg.mixer.Sound( 'assets/fire.mp3' )
+bullet_sound.set_volume( 0.3 )
 
 #explosion
 explosion_img = pg.image.load( 'assets/explosion.png' )
 explosions: List[ Explosion ] = []
+explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 
 
 # write things
@@ -79,6 +84,7 @@ while running:
             if event.key == pg.K_SPACE or event.key == pg.K_LSHIFT:
                 blt = Bullet( bullet_img, screen, pl )
                 bullets.append( blt )
+                bullet_sound.play()
                 
         if event.type == pg.KEYUP:
             if event.key == pg.K_d or event.key == pg.K_RIGHT:
@@ -98,6 +104,7 @@ while running:
                     if zep.dead is True:
                         expl = Explosion( zep.x, zep.y, explosion_img, screen )
                         explosions.append( expl )
+                        explosion_sound.play()
 
     pl.angle += pl.rotation
 

@@ -12,7 +12,7 @@ class Player:
         self.speed = 0.2
         self.delta = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) * self.speed
         self.rotation = 0.0
-        self.size = 16
+        self.size = 32
         self.rect = pg.Rect( self.position, ( self.size, self.size ) )
         
     def draw( self ):
@@ -28,12 +28,12 @@ class Player:
 
     def get_rotation_increment( self ):
         # TODO: make this a linear function
-        if self.speed > 0.35: return 0.08
-        if self.speed > 0.3: return 0.09
-        if self.speed > 0.25: return 0.1
-        if self.speed > 0.2: return 0.11
-        if self.speed > 0.15: return 0.12
-        if self.speed > 0.1: return 0.13
+        if self.speed > 0.35: return 0.1
+        if self.speed > 0.3: return 0.11
+        if self.speed > 0.25: return 0.12
+        if self.speed > 0.2: return 0.13
+        if self.speed > 0.15: return 0.14
+        if self.speed > 0.1: return 0.15
         else: return 0.14
 
 
