@@ -98,11 +98,9 @@ while running:
 
     for blt in bullets:
         blt.position += blt.delta
-        blt_rect = pg.Rect( blt.position[ 0 ], blt.position[ 1 ], 4, 4 )
         for zep in airships:
             if not zep.dead:
-                zep_rect = pg.Rect( zep.x + 5, zep.y + 5, 54, 54 )
-                if pg.Rect.colliderect( blt_rect, zep_rect ):
+                if pg.Rect.colliderect( blt.get_rect(), zep.rect ):
                     zep.hit()
                     bullets.remove( blt )
                     if zep.dead is True:

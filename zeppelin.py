@@ -9,6 +9,7 @@ class Zeppelin():
         self.angle = rn.randint( 0, 359 )
         self.img = img
         self.screen = screen
+        self.rect = pg.Rect( self.x + 5, self.y + 5, 54, 54 )
         self.hp = 4
         self.dead = False
 
@@ -19,3 +20,6 @@ class Zeppelin():
     def hit( self ):
         if self.hp > 0: self.hp -= 1
         else: self.dead = True
+
+    def kill( self ):
+        self.dead = True

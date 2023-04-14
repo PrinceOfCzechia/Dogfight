@@ -16,3 +16,6 @@ class Bullet:
 
     def draw( self ):
         self.screen.blit( self.img, self.position )
+
+    def get_rect( self ):
+        return pg.Rect( self.position[ 0 ], self.position[ 1 ], 4, 4 )
