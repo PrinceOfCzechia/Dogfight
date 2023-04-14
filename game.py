@@ -33,6 +33,8 @@ player_img = pg.transform.scale( pg.image.load( 'assets/plane.png' ), ( 32, 32 )
 player_x = 500.0
 player_y = 600.0
 pl = Player( player_x, player_y, player_img, screen )
+full_heart_img = pg.image.load( 'assets/full_heart.png' )
+empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 
 # zeppelin
 zep_img = pg.image.load( 'assets/zeppelin.png' )
@@ -105,9 +107,17 @@ while running:
                     zep.hit()
                     bullets.remove( blt )
                     if zep.dead is True:
-                        expl = Explosion( zep.x, zep.y, explosion_img, screen )
-                        explosions.append( expl )
+                        explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
                         explosion_sound.play()
+                        score += 50
+
+    for zep in airships:
+        if not zep.dead:
+            if pg.Rect.colliderect( zep.rect, pl.get_rect() ):
+                zep.kill()
+                explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
+                explosion_sound.play()
+                pl.big_hit()
 
     pl.angle += pl.rotation
 
@@ -126,6 +136,7 @@ while running:
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
+    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 120, display_height - 100 )
     for zep in airships:
         if not zep.dead: zep.draw()
     for blt in bullets: blt.draw()
@@ -141,3 +152,5 @@ while running:
     # the very end of the loop
     pg.display.update()
     
+text_surface = font_std.render( 'GAME OVER', True, ( 220, 220, 220 ) )
+screen.blit( text_surface, ( display_width, display_height ) )

@@ -13,6 +13,7 @@ class Player:
         self.delta = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) * self.speed
         self.rotation = 0.0
         self.size = 32
+        self.hp = 5
         
     def draw( self ):
         rot_angle = 270 - self.angle
@@ -37,3 +38,13 @@ class Player:
 
     def get_rect( self ):
         return pg.Rect( self.position, ( self.size, self.size ) )
+    
+    def hit( self ):
+        self.hp -= 1
+
+    def big_hit( self ):
+        self.hp -= 2
+
+    def draw_hearts( self, full: pg.image, empty: pg.image, x_coordinate, y_coordinate ):
+        for i in range( self.hp ):
+            self.screen.blit( full, (x_coordinate + 20 * i, y_coordinate ) )
