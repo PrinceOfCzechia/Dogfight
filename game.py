@@ -46,7 +46,7 @@ for i in range( num_zep ):
 bullet_img = pg.transform.scale( pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) )
 bullets: List[ Bullet ] = []
 bullet_sound = pg.mixer.Sound( 'assets/fire.mp3' )
-bullet_sound.set_volume( 0.3 )
+bullet_sound.set_volume( 0.1 )
 
 #explosion
 explosion_img = pg.image.load( 'assets/explosion.png' )
@@ -55,6 +55,7 @@ explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
+pg.mixer.music.set_volume( 0.3 )
 pg.mixer.music.play( -1, 0.0, 0 )
 
 
