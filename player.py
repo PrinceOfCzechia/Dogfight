@@ -13,7 +13,7 @@ class Player:
         self.delta = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) * self.speed
         self.rotation = 0.0
         self.size = 32
-        self.max_hp = 5
+        self.max_hp = 1
         self.hp = self.max_hp
         
     def draw( self ):
@@ -38,7 +38,7 @@ class Player:
         else: return 0.80
 
     def get_rect( self ):
-        return pg.Rect( self.position, ( self.size, self.size ) )
+        return pg.Rect( self.position, ( self.size - 2, self.size - 2 ) )
     
     def hit( self ):
         self.hp -= 1

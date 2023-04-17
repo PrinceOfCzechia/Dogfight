@@ -15,11 +15,12 @@ info = pg.display.Info()
 pg.mixer.init()
 running = True
 display_width = info.current_w
-display_height = info.current_h - 50
+display_height = info.current_h - 75
 score = 0
 explosion_duration = 50
 bullet_img = pg.image.load( 'assets/bullet.png' )
 font_std = pg.font.Font('assets/font.ttf', 25 )
+font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
 
 # display size, name, icon
@@ -39,7 +40,7 @@ empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 # zeppelin
 zep_img = pg.image.load( 'assets/zeppelin.png' )
 airships: List[ Zeppelin ] = []
-num_zep = rn.randint( 2, 5 )
+num_zep = rn.randint( 4, 8 )
 for i in range( num_zep ):
     zep = Zeppelin( zep_img, screen, display_width, display_height )
     airships.append( zep )
@@ -65,15 +66,20 @@ pg.mixer.music.play( -1, 0.0, 0 )
 def display_score():
     score_string = 'score: ' + str(score)
     text_surface = font_std.render( score_string, True, (220,220,220) )
-    screen.blit( text_surface, (20, 10) )
+    screen.blit( text_surface, ( 20, 10 ) )
 
 def display_stats():
     speed_string = 'speed: ' + str( int( np.round(pl.speed * 1000, -1) ) )
     text_surface = font_std.render( speed_string, True, (220,220,220) )
-    screen.blit( text_surface, (display_width-100,display_height-50) )
+    screen.blit( text_surface, ( display_width-100, display_height-50 ) )
+
+def display_over():
+    over_string = 'game over'
+    text_surface = font_big.render( over_string, True, (220,220,220) )
+    screen.blit( text_surface, ( display_width/2 - 100, display_height/2 - 20 ) )
 
 # game loop
-while running:
+while pl.alive():
     for event in pg.event.get():
         # QUIT button
         if event.type == pg.QUIT:
@@ -129,14 +135,14 @@ while running:
     pl.y = pl.position[ 1 ]
 
     # keep player in borders
-    if pl.x < 0: pl.x = 0
-    if pl.x > display_width - pl.size: pl.x = display_width - pl.size
-    if pl.y < 0: pl.y = 0
-    if pl.y > display_height - pl.size: pl.y = display_height - pl.size
+    if pl.x + 10 * pl.delta[ 0 ] < 0: pl.x = 0
+    if pl.x + 10 * pl.delta[ 0 ] > display_width - pl.size: pl.x = display_width - pl.size
+    if pl.y + 10 * pl.delta[ 1 ] < 0: pl.y = 0
+    if pl.y + 10 * pl.delta[ 1 ] > display_height - pl.size: pl.y = display_height - pl.size
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
-    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 120, display_height - 100 )
+    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 20, display_height - 100 )
     for zep in airships:
         if not zep.dead: zep.draw()
     for blt in bullets: blt.draw()
@@ -151,6 +157,27 @@ while running:
 
     # the very end of the loop
     pg.display.update()
+
+# draw static images when game over
+while not pl.alive() and running:
+    for event in pg.event.get():
+        # QUIT button
+        if event.type == pg.QUIT:
+            running = False
+
+    screen.blit( bg_img, ( 0, 0 ) )
+    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 20, display_height - 100 )
+    for zep in airships:
+        if not zep.dead: zep.draw()
+    for blt in bullets: blt.draw()
+    for expl in explosions:
+        if expl.visible:
+            if expl.timer < expl.duration: expl.draw()
+            expl.timer += 1
+    pl.draw()
+    display_score()
+    display_stats()
+    display_over()
+
+    pg.display.update()
     
-text_surface = font_std.render( 'GAME OVER', True, ( 220, 220, 220 ) )
-screen.blit( text_surface, ( display_width, display_height ) )
