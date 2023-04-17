@@ -4,15 +4,15 @@ A little pygame-based game I made. Control a plane, shoot things, pretty straigh
 ### Controls
 So far, a plane can be controlled as follows:
 
-A or LEFT to turn left
+`A / LEFT` to turn left
 
-D or RIGHT to turn right
+`D / RIGHT` to turn right
 
-W or UP to increase speed
+`W / UP` to increase speed
 
-S or DOWN to decrease speed
+`S / DOWN` to decrease speed
 
-SPACE or LEFT SHIFT to shoot a single bullet, currently, there is no cooldown
+`SPACE / LEFT SHIFT` to shoot a single bullet, currently, there is no cooldown
 
 ### Mechanics
 Several airships are spawned with random coordinates and rotation, once hit five times by a bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
