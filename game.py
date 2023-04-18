@@ -74,12 +74,16 @@ def display_stats():
     screen.blit( text_surface, ( display_width-100, display_height-50 ) )
 
 def display_over():
+    sf = pg.Surface( (display_width, display_height), pg.SRCALPHA)
+    filler = pg.Color( 0, 100, 100, 96 )
+    sf.fill( filler )
+    screen.blit( sf, (0, 0) )
     over_string = 'game over'
     text_surface = font_big.render( over_string, True, (220,220,220) )
     screen.blit( text_surface, ( display_width/2 - 100, display_height/2 - 20 ) )
 
 # game loop
-while pl.alive():
+while pl.alive() and running:
     for event in pg.event.get():
         # QUIT button
         if event.type == pg.QUIT:
@@ -173,7 +177,7 @@ while not pl.alive() and running:
     for expl in explosions:
         if expl.visible:
             if expl.timer < expl.duration: expl.draw()
-            expl.timer += 1
+            if not pg.Rect.colliderect( expl.rect, pl.get_rect()): expl.timer += 1
     pl.draw()
     display_score()
     display_stats()

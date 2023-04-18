@@ -13,7 +13,7 @@ class Player:
         self.delta = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) * self.speed
         self.rotation = 0.0
         self.size = 32
-        self.max_hp = 1
+        self.max_hp = 3
         self.hp = self.max_hp
         
     def draw( self ):
