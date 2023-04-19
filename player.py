@@ -9,36 +9,41 @@ class Player:
         self.screen = screen
         self.angle = 270.0
         self.position = np.array( [ self.x, self.y ] )
-        self.speed = 0.7
+        self.speed = 0.6
+        self.max_speed = 0.8
+        self.min_speed = 0.4
+        self.speed_increment = 0.05
         self.delta = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) * self.speed
         self.rotation = 0.0
         self.size = 32
-        self.max_hp = 3
+        self.max_hp = 5
         self.hp = self.max_hp
         
     def draw( self ):
         rot_angle = 270 - self.angle
         rotated = pg.transform.rotate( self.img, rot_angle )
-        self.screen.blit( rotated, ( self.x, self.y ) )
+        self.screen.blit( rotated, ( self.position[ 0 ], self.position[ 1 ] ) )
 
     def increment_speed( self ):
-        if self.speed <= 0.85: self.speed += 0.05
+        if self.speed < self.max_speed: self.speed += self.speed_increment
+        if self.speed > self.max_speed: self.speed = self.max_speed
 
     def decrement_speed( self ):
-        if self.speed > 0.50: self.speed -= 0.05
+        if self.speed > self.min_speed: self.speed -= self.speed_increment
+        if self.speed < self.min_speed: self.speed = self.min_speed
 
     def get_rotation_increment( self ):
         # TODO: make the magic numbers a function
-        if self.speed > 0.65: return 0.50
-        if self.speed > 0.6: return 0.55
-        if self.speed > 0.55: return 0.60
-        if self.speed > 0.5: return 0.65
-        if self.speed > 0.45: return 0.70
-        if self.speed > 0.4: return 0.75
-        else: return 0.80
+        if self.speed > 0.75: return 0.15
+        if self.speed > 0.7: return 0.18
+        if self.speed > 0.65: return 0.21
+        if self.speed > 0.6: return 0.24
+        if self.speed > 0.55: return 0.27
+        if self.speed > 0.5: return 0.30
+        else: return 0.33
 
     def get_rect( self ):
-        return pg.Rect( self.position, ( self.size - 2, self.size - 2 ) )
+        return pg.Rect( self.position, ( self.size - 4, self.size - 4 ) )
     
     def hit( self ):
         self.hp -= 1

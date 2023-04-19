@@ -4,8 +4,8 @@ from player import Player
 
 class Bullet:
     def __init__( self, img, screen, player: Player ):
-        self.x = player.x + 8
-        self.y = player.y + 8
+        self.x = player.position[ 0 ] + 8
+        self.y = player.position[ 1 ] + 8
         self.angle = 270 - player.angle
         self.img = pg.transform.rotate( img, self.angle )
         self.screen = screen
