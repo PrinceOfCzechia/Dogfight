@@ -37,6 +37,12 @@ pl = Player( player_x, player_y, player_img, screen )
 full_heart_img = pg.image.load( 'assets/full_heart.png' )
 empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 
+# enemy
+enemy_img = pg.transform.scale( pg.image.load( 'assets/aircraft.png' ), ( 32, 32 ) )
+enemy_x = display_width / 2
+enemy_y = display_height / 2
+en = Enemy( enemy_x, enemy_y, enemy_img, screen )
+
 # zeppelin
 zep_img = pg.image.load( 'assets/zeppelin.png' )
 airships: List[ Zeppelin ] = []
@@ -91,9 +97,9 @@ while pl.alive() and running:
         # player controls
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_d or event.key == pg.K_RIGHT:
-                pl.rotation += 0.1
+                pl.rotation += pl.get_rotation_increment()
             if event.key ==pg.K_a or event.key == pg.K_LEFT:
-                pl.rotation -= 0.1
+                pl.rotation -= pl.get_rotation_increment()
             if event.key == pg.K_w or event.key == pg.K_UP:
                 pl.increment_speed()
             if event.key == pg.K_s or event.key == pg.K_DOWN:
@@ -120,6 +126,11 @@ while pl.alive() and running:
                         explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
                         explosion_sound.play()
                         score += 50
+        if not en.dead and pg.Rect.colliderect( blt.get_rect(), en.get_rect() ):
+            en.hit()
+            bullets.remove( blt )
+            if en.hp == 0: en.kill()
+            if en.dead: explosions.append( Explosion( en.position[ 0 ], en.position[ 1 ], explosion_img, screen ) )
 
     for zep in airships:
         if not zep.dead:
@@ -135,14 +146,16 @@ while pl.alive() and running:
     pl.delta[ 1 ] = pl.speed * np.sin( pl.angle * np.pi / 180 )
 
     pl.position += pl.delta
-    pl.x = pl.position[ 0 ]
-    pl.y = pl.position[ 1 ]
 
     # keep player in borders
-    if pl.x + 10 * pl.delta[ 0 ] < 0: pl.x = 0
-    if pl.x + 10 * pl.delta[ 0 ] > display_width - pl.size: pl.x = display_width - pl.size
-    if pl.y + 10 * pl.delta[ 1 ] < 0: pl.y = 0
-    if pl.y + 10 * pl.delta[ 1 ] > display_height - pl.size: pl.y = display_height - pl.size
+    if pl.position[ 0 ] + 10 * pl.delta[ 0 ] < 0: pl.position[ 0 ] = 0
+    if pl.position[ 0 ] + 10 * pl.delta[ 0 ] > display_width - pl.size: pl.position[ 0 ] = display_width - pl.size
+    if pl.position[ 1 ] + 10 * pl.delta[ 1 ] < 0: pl.position[ 1 ] = 0
+    if pl.position[ 1 ] + 10 * pl.delta[ 1 ] > display_height - pl.size: pl.position[ 1 ] = display_height - pl.size
+
+    # enemy movement
+    en.position += en.delta * en.speed
+    en.angle += en.rotation
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
@@ -155,6 +168,7 @@ while pl.alive() and running:
             if expl.timer < expl.duration: expl.draw()
             expl.timer += 1
     pl.draw()
+    if not en.dead: en.draw()
     display_score()
     display_stats()
 
@@ -179,6 +193,7 @@ while not pl.alive() and running:
             if expl.timer < expl.duration: expl.draw()
             if not pg.Rect.colliderect( expl.rect, pl.get_rect()): expl.timer += 1
     pl.draw()
+    en.draw()
     display_score()
     display_stats()
     display_over()
