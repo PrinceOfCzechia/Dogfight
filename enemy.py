@@ -4,15 +4,13 @@ from player import Player
 
 class Enemy:
     def __init__( self, x, y, img, screen ):
-        self.x = x
-        self.y = y
         self.img = img
         self.screen = screen
         self.angle = 90.0
-        self.position = np.array( [ self.x, self.y ] )
+        self.position = np.array( [ x, y ] )
         self.speed = 0.2
         self.delta = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) * self.speed
-        self.rotation = 0.1
+        self.rotation = 0.0
         self.direction = 1
         self.size = 32
         self.rect = pg.Rect( self.position, ( self.size, self.size ) )
@@ -29,12 +27,16 @@ class Enemy:
         return pg.Rect( self.position, ( self.size - 2, self.size - 2 ) )
 
     def getDirection( self, player: Player ):
-        return True
+        if np.dot( player.delta, self.delta > 0 ): return True
+        else: return False
     
     def hit( self ):
         self.hp -= 1
 
     def kill( self ):
         self.dead = True
+
+    def changeDirection( self ):
+        self.direction = self.direction * -1
 
 
