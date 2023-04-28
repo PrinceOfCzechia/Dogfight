@@ -20,6 +20,8 @@ Several airships are spawned with random coordinates and rotation, once hit five
 Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs, text 'GAME OVER' is displayed in the middle of the screen.
 
 ### TODOs
-TODO: add a bomb and something to bomb with it
+TODO: add a bomb, cap amount of bullets
 
-TODO: add a semi-intelligent anti-aircraft gun
+TODO: airship rectangle rotation
+
+TODO: enemy rotation
