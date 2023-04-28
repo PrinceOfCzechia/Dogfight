@@ -126,7 +126,7 @@ while pl.alive() and running:
                         explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
                         explosion_sound.play()
                         score += 50
-        if not en.dead and pg.Rect.colliderect( blt.get_rect(), en.get_rect() ):
+        if not en.dead and pg.Rect.colliderect( blt.get_rect(), en.rect ):
             en.hit()
             bullets.remove( blt )
             if en.hp == 0:

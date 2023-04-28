@@ -23,9 +23,6 @@ class Enemy:
         rotated = pg.transform.rotate( self.img, rot_angle )
         self.screen.blit( rotated, ( self.position[ 0 ], self.position[ 1 ] ) )
 
-    def get_rect( self ):
-        return pg.Rect( self.position, ( self.size - 2, self.size - 2 ) )
-
     def getDirection( self, player: Player ):
         if np.dot( player.delta, self.delta > 0 ): return True
         else: return False
@@ -38,5 +35,3 @@ class Enemy:
 
     def changeDirection( self ):
         self.direction = self.direction * -1
-
-
