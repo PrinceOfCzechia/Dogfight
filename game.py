@@ -32,15 +32,15 @@ pg.display.set_caption( 'DogeFight' )
 # player
 player_img = pg.transform.scale( pg.image.load( 'assets/plane.png' ), ( 32, 32 ) )
 player_x = 500.0
-player_y = 600.0
+player_y = display_height * 7/8
 pl = Player( player_x, player_y, player_img, screen )
 full_heart_img = pg.image.load( 'assets/full_heart.png' )
 empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 
 # enemy
-enemy_img = pg.transform.scale( pg.image.load( 'assets/aircraft.png' ), ( 32, 32 ) )
-enemy_x = display_width / 2
-enemy_y = display_height / 2
+enemy_img = pg.transform.scale( pg.image.load( 'assets/tank.png' ), ( 32, 32 ) )
+enemy_x = display_width / 3
+enemy_y = display_height / 4
 en = Enemy( enemy_x, enemy_y, enemy_img, screen )
 
 # zeppelin
@@ -116,7 +116,7 @@ while pl.alive() and running:
                 pl.rotation = 0
 
     for blt in bullets:
-        blt.position += blt.delta
+        blt.position += blt.delta * blt.increment
         for zep in airships:
             if not zep.dead:
                 if pg.Rect.colliderect( blt.get_rect(), zep.rect ):
@@ -129,7 +129,9 @@ while pl.alive() and running:
         if not en.dead and pg.Rect.colliderect( blt.get_rect(), en.get_rect() ):
             en.hit()
             bullets.remove( blt )
-            if en.hp == 0: en.kill()
+            if en.hp == 0:
+                en.kill()
+                score += 500
             if en.dead: explosions.append( Explosion( en.position[ 0 ], en.position[ 1 ], explosion_img, screen ) )
 
     for zep in airships:
@@ -154,8 +156,7 @@ while pl.alive() and running:
     if pl.position[ 1 ] + 10 * pl.delta[ 1 ] > display_height - pl.size: pl.position[ 1 ] = display_height - pl.size
 
     # enemy movement
-    en.position += en.delta * en.speed
-    en.angle += en.rotation
+    en.angle += en.rotation * en.direction
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
@@ -167,8 +168,8 @@ while pl.alive() and running:
         if expl.visible:
             if expl.timer < expl.duration: expl.draw()
             expl.timer += 1
-    pl.draw()
     if not en.dead: en.draw()
+    pl.draw()
     display_score()
     display_stats()
 

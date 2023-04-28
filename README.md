@@ -12,7 +12,7 @@ So far, a plane can be controlled as follows:
 
 `S / DOWN` to decrease speed
 
-`SPACE / LEFT SHIFT` to shoot a single bullet, currently, there is no cooldown
+`SPACE / LEFT SHIFT` to shoot a single bullet, currently, there is no cooldown, but the gun cannot fire in an automatic mode
 
 ### Mechanics
 Several airships are spawned with random coordinates and rotation, once hit five times by a bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
