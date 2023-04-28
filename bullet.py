@@ -11,7 +11,7 @@ class Bullet:
         self.screen = screen
         self.position = np.array( [ self.x, self.y ] )
         self.delta = np.copy( player.delta ) / np.linalg.norm( player.delta )
-        self.increment = 0.5
+        self.increment = 1.5
         self.hit = False
 
     def draw( self ):
