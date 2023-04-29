@@ -17,10 +17,12 @@ So far, a plane can be controlled as follows:
 ### Mechanics
 Several airships are spawned with random coordinates and rotation, once hit five times by a bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
 
+The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` key plays the sound of an empty gun.
+
 Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs, text 'GAME OVER' is displayed in the middle of the screen.
 
 ### TODOs
-TODO: add a bomb, cap amount of bullets
+TODO: add a bomb
 
 TODO: airship position should not collide with each other or with the tank
 

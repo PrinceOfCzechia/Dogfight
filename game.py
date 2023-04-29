@@ -56,6 +56,7 @@ bullet_img = pg.transform.scale( pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) 
 bullets: List[ Bullet ] = []
 bullet_sound = pg.mixer.Sound( 'assets/fire.mp3' )
 bullet_sound.set_volume( 0.1 )
+empty_sound = pg.mixer.Sound( 'assets/empty.wav' )
 
 #explosion
 explosion_img = pg.image.load( 'assets/explosion.png' )
@@ -65,7 +66,7 @@ explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
 pg.mixer.music.set_volume( 0.3 )
-#pg.mixer.music.play( -1, 0.0, 0 ) TODO: uncomment
+pg.mixer.music.play( -1, 0.0, 0 )
 
 
 # write things
@@ -75,9 +76,14 @@ def display_score():
     screen.blit( text_surface, ( 20, 10 ) )
 
 def display_stats():
+    # speed
     speed_string = 'speed: ' + str( int( np.round(pl.speed * 1000, -1) ) )
-    text_surface = font_std.render( speed_string, True, (220,220,220) )
-    screen.blit( text_surface, ( display_width-100, display_height-50 ) )
+    speed_surface = font_std.render( speed_string, True, (220,220,220) )
+    screen.blit( speed_surface, ( display_width-100, display_height-50 ) )
+    # ammo
+    ammo_string = 'ammo: ' + str( pl.ammo )
+    ammo_surface = font_std.render( ammo_string, True, (220,220,220) )
+    screen.blit( ammo_surface, ( display_width-100, display_height-80 ) )
 
 def display_over():
     sf = pg.Surface( (display_width, display_height), pg.SRCALPHA)
@@ -105,9 +111,13 @@ while pl.alive() and running:
             if event.key == pg.K_s or event.key == pg.K_DOWN:
                 pl.decrement_speed()
             if event.key == pg.K_SPACE or event.key == pg.K_LSHIFT:
-                blt = Bullet( bullet_img, screen, pl )
-                bullets.append( blt )
-                bullet_sound.play()
+                if pl.ammo > 0:
+                    blt = Bullet( bullet_img, screen, pl )
+                    bullets.append( blt )
+                    bullet_sound.play()
+                    pl.ammo -= 1
+                else:
+                    empty_sound.play()
                 
         if event.type == pg.KEYUP:
             if event.key == pg.K_d or event.key == pg.K_RIGHT:

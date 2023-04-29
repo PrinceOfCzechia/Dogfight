@@ -18,6 +18,7 @@ class Player:
         self.size = 32
         self.max_hp = 5
         self.hp = self.max_hp
+        self.ammo = 100
         
     def draw( self ):
         rot_angle = 270 - self.angle
