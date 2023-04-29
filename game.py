@@ -8,6 +8,7 @@ from zeppelin import Zeppelin
 from explosion import Explosion
 from enemy import Enemy
 from bomb import Bomb
+from carrier import Carrier
 
 pg.init()
 
@@ -63,10 +64,14 @@ empty_sound = pg.mixer.Sound( 'assets/empty.wav' )
 bomb_img = pg.image.load( 'assets/bomb.png' )
 bombs: List[ Bomb ] = []
 
-#explosion
+# explosion
 explosion_img = pg.image.load( 'assets/explosion.png' )
 explosions: List[ Explosion ] = []
 explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
+
+# carrier
+carrier_img = pg.image.load( 'assets/aircraft-carrier.png' )
+carrier = Carrier( display_width - 400, display_height - 300, carrier_img, screen )
 
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
@@ -150,13 +155,6 @@ while pl.alive() and running:
                         explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
                         explosion_sound.play()
                         score += 50
-        if not en.dead and pg.Rect.colliderect( blt.get_rect(), en.rect ):
-            en.hit()
-            bullets.remove( blt )
-            if en.hp == 0:
-                en.kill()
-                score += 500
-            if en.dead: explosions.append( Explosion( en.position[ 0 ], en.position[ 1 ], explosion_img, screen ) )
 
     for zep in airships:
         if not zep.dead:
@@ -171,9 +169,16 @@ while pl.alive() and running:
             bmb.position += bmb.delta
             bmb.period += 1
         else:
-            explosions.append( Explosion( bmb.position[ 0 ], bmb.position[ 1 ], explosion_img, screen ) )
+            expl = Explosion( bmb.position[ 0 ], bmb.position[ 1 ], explosion_img, screen )
+            explosions.append( expl )
             bombs.remove( bmb )
             explosion_sound.play()
+            if not en.dead and pg.Rect.colliderect( expl.rect, en.rect ):
+                en.kill()
+                score += 500
+                explosions.append( Explosion( en.position[ 0 ] + en.size/2, en.position[ 1 ] + en.size/2,
+                                              explosion_img, screen ) )
+                explosion_sound.play()
 
     pl.angle += pl.rotation
 
@@ -195,6 +200,7 @@ while pl.alive() and running:
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
+    carrier.draw()
     for zep in airships:
         if not zep.dead: zep.draw()
     for blt in bullets: blt.draw()

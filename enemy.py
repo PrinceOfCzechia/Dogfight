@@ -14,8 +14,6 @@ class Enemy:
         self.direction = 1
         self.size = 32
         self.rect = pg.Rect( self.position, ( self.size, self.size ) )
-        self.max_hp = 5
-        self.hp = self.max_hp
         self.dead = False
         
     def draw( self ):
