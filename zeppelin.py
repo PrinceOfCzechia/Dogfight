@@ -21,7 +21,8 @@ class Zeppelin():
     def draw( self ):
         rotated = pg.transform.rotate( self.img, self.angle )
         self.screen.blit( rotated, ( self.x,self.y ) )
-        pg.draw.rect( self.screen, [255,0,0], self.rect )
+        # uncomment to see self.rect
+        # pg.draw.rect( self.screen, [255,0,0], self.rect )
 
     def hit( self ):
         if self.hp > 0: self.hp -= 1
