@@ -22,6 +22,6 @@ Once the player's HP drops to zero, the game loop stops. If any explosions are c
 ### TODOs
 TODO: add a bomb, cap amount of bullets
 
-TODO: airship rectangle rotation
+TODO: airship position should not collide with each other or with the tank
 
 TODO: enemy rotation
