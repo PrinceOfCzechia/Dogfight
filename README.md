@@ -12,18 +12,24 @@ So far, a plane can be controlled as follows:
 
 `S / DOWN` to decrease speed
 
-`SPACE / LEFT SHIFT` to shoot a single bullet, currently, there is no cooldown, but the gun cannot fire in an automatic mode
+`SPACE` to shoot a single bullet, currently, there is no cooldown, but the gun cannot fire in an automatic mode
+
+`B` deploys a bomb
+
+`L_SHIFT / R_SHIFT` displays a crosshair for bombs
 
 ### Mechanics
 Several airships are spawned with random coordinates and rotation, once hit five times by a bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
 
-The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` key plays the sound of an empty gun.
+The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` key plays the sound of an empty gun. Similarly, the bombs are capped at 3.
 
 Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs, text 'GAME OVER' is displayed in the middle of the screen.
 
 ### TODOs
+TODO: fix carrier bombing
+
 TODO: L_SHIFT to show/hide bomb aim
 
 TODO: add airship and tank spawning rule so they do not collide
 
-TODO: enemy rotation
+TODO: tank rotation
