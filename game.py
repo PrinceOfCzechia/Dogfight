@@ -41,7 +41,7 @@ empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 enemy_img = pg.transform.scale( pg.image.load( 'assets/tank.png' ), ( 32, 32 ) )
 enemy_x = display_width / 3
 enemy_y = display_height / 4
-en = Enemy( enemy_x, enemy_y, enemy_img, screen )
+en = Enemy( enemy_x, enemy_y, enemy_img, screen, pl )
 
 # zeppelin
 zep_img = pg.image.load( 'assets/zeppelin.png' )
@@ -65,7 +65,7 @@ explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
 pg.mixer.music.set_volume( 0.3 )
-pg.mixer.music.play( -1, 0.0, 0 )
+#pg.mixer.music.play( -1, 0.0, 0 ) TODO: uncomment
 
 
 # write things
@@ -156,7 +156,8 @@ while pl.alive() and running:
     if pl.position[ 1 ] + 10 * pl.delta[ 1 ] > display_height - pl.size: pl.position[ 1 ] = display_height - pl.size
 
     # enemy movement
-    en.angle += en.rotation * en.direction
+    if not en.correctDirection(): en.changeDirection()
+    en.rotate()
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
