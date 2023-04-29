@@ -6,8 +6,7 @@ class Bullet:
     def __init__( self, img, screen, player: Player ):
         self.x = player.position[ 0 ] + 8
         self.y = player.position[ 1 ] + 8
-        self.angle = 270 - player.angle
-        self.img = pg.transform.rotate( img, self.angle )
+        self.img = pg.transform.rotate( img, 270 - player.angle )
         self.screen = screen
         self.position = np.array( [ self.x, self.y ] )
         self.delta = np.copy( player.delta ) / np.linalg.norm( player.delta )

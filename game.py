@@ -7,6 +7,7 @@ from bullet import Bullet
 from zeppelin import Zeppelin
 from explosion import Explosion
 from enemy import Enemy
+from bomb import Bomb
 
 pg.init()
 
@@ -58,6 +59,10 @@ bullet_sound = pg.mixer.Sound( 'assets/fire.mp3' )
 bullet_sound.set_volume( 0.1 )
 empty_sound = pg.mixer.Sound( 'assets/empty.wav' )
 
+# bomb
+bomb_img = pg.image.load( 'assets/bomb.png' )
+bombs: List[ Bomb ] = []
+
 #explosion
 explosion_img = pg.image.load( 'assets/explosion.png' )
 explosions: List[ Explosion ] = []
@@ -66,7 +71,7 @@ explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
 pg.mixer.music.set_volume( 0.3 )
-pg.mixer.music.play( -1, 0.0, 0 )
+# TODO: uncomment pg.mixer.music.play( -1, 0.0, 0 )
 
 
 # write things
@@ -79,11 +84,15 @@ def display_stats():
     # speed
     speed_string = 'speed: ' + str( int( np.round(pl.speed * 1000, -1) ) )
     speed_surface = font_std.render( speed_string, True, (220,220,220) )
-    screen.blit( speed_surface, ( display_width-100, display_height-50 ) )
+    screen.blit( speed_surface, ( display_width-120, display_height-50 ) )
     # ammo
     ammo_string = 'ammo: ' + str( pl.ammo )
     ammo_surface = font_std.render( ammo_string, True, (220,220,220) )
-    screen.blit( ammo_surface, ( display_width-100, display_height-80 ) )
+    screen.blit( ammo_surface, ( display_width-120, display_height-80 ) )
+    # bombs
+    bomb_string = 'bombs left: ' + str( pl.bomb_cap )
+    bomb_surface = font_std.render( bomb_string, True, (220,220,220) )
+    screen.blit( bomb_surface, ( display_width-120, display_height-110 ) )
 
 def display_over():
     sf = pg.Surface( (display_width, display_height), pg.SRCALPHA)
@@ -110,7 +119,7 @@ while pl.alive() and running:
                 pl.increment_speed()
             if event.key == pg.K_s or event.key == pg.K_DOWN:
                 pl.decrement_speed()
-            if event.key == pg.K_SPACE or event.key == pg.K_LSHIFT:
+            if event.key == pg.K_SPACE:
                 if pl.ammo > 0:
                     blt = Bullet( bullet_img, screen, pl )
                     bullets.append( blt )
@@ -118,6 +127,11 @@ while pl.alive() and running:
                     pl.ammo -= 1
                 else:
                     empty_sound.play()
+            if event.key == pg.K_b:
+                if pl.bomb_cap > 0:
+                    pl.bomb_cap -= 1
+                    bombs.append( Bomb( bomb_img, screen, pl ) )
+                else: pass
                 
         if event.type == pg.KEYUP:
             if event.key == pg.K_d or event.key == pg.K_RIGHT:
@@ -152,6 +166,14 @@ while pl.alive() and running:
                 explosion_sound.play()
                 pl.big_hit()
 
+    for bmb in bombs:
+        if not np.array_equal( bmb.position.all(), bmb.destination ):
+            bmb.position += bmb.delta
+        else:
+            explosions.append( Explosion( bmb.position[ 0 ], bmb.position[ 1 ], explosion_img, screen ) )
+            bombs.remove( bmb )
+            explosion_sound.play()
+
     pl.angle += pl.rotation
 
     pl.delta[ 0 ] = pl.speed * np.cos( pl.angle * np.pi / 180 )
@@ -160,10 +182,10 @@ while pl.alive() and running:
     pl.position += pl.delta
 
     # keep player in borders
-    if pl.position[ 0 ] + 10 * pl.delta[ 0 ] < 0: pl.position[ 0 ] = 0
-    if pl.position[ 0 ] + 10 * pl.delta[ 0 ] > display_width - pl.size: pl.position[ 0 ] = display_width - pl.size
-    if pl.position[ 1 ] + 10 * pl.delta[ 1 ] < 0: pl.position[ 1 ] = 0
-    if pl.position[ 1 ] + 10 * pl.delta[ 1 ] > display_height - pl.size: pl.position[ 1 ] = display_height - pl.size
+    if pl.position[ 0 ] + 5 * pl.delta[ 0 ] < 0: pl.position[ 0 ] = 0
+    if pl.position[ 0 ] + 5 * pl.delta[ 0 ] > display_width - pl.size: pl.position[ 0 ] = display_width - pl.size
+    if pl.position[ 1 ] + 5 * pl.delta[ 1 ] < 0: pl.position[ 1 ] = 0
+    if pl.position[ 1 ] + 5 * pl.delta[ 1 ] > display_height - pl.size: pl.position[ 1 ] = display_height - pl.size
 
     # enemy movement
     if not en.correctDirection(): en.changeDirection()
@@ -171,10 +193,11 @@ while pl.alive() and running:
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
-    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 20, display_height - 100 )
+    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
     for zep in airships:
         if not zep.dead: zep.draw()
     for blt in bullets: blt.draw()
+    for bmb in bombs: bmb.draw()
     for expl in explosions:
         if expl.visible:
             if expl.timer < expl.duration: expl.draw()
