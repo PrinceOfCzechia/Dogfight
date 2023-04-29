@@ -7,9 +7,9 @@ class Bomb:
         self.img = pg.transform.rotate( img, 135 - player.angle )
         self.screen = screen
         self.player = player
-        self.delta = np.copy( player.delta ) / 2
+        self.period = 0
+        self.delta = np.copy( player.delta ) / ( np.sqrt( self.period + 1 ) )
         self.position = np.copy( player.position )
-        self.destination = self.position + ( self.delta * 1 )
 
     def draw( self ):
         self.screen.blit( self.img, self.position )

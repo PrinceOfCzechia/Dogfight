@@ -167,8 +167,9 @@ while pl.alive() and running:
                 pl.big_hit()
 
     for bmb in bombs:
-        if not np.array_equal( bmb.position.all(), bmb.destination ):
+        if bmb.period < 200:
             bmb.position += bmb.delta
+            bmb.period += 1
         else:
             explosions.append( Explosion( bmb.position[ 0 ], bmb.position[ 1 ], explosion_img, screen ) )
             bombs.remove( bmb )
