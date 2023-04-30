@@ -24,9 +24,6 @@ class Enemy:
     def correctDirection( self ):
         if np.dot( self.player.delta, self.delta > 0 ): return True
         else: return False
-    
-    def hit( self ):
-        self.hp -= 1
 
     def kill( self ):
         self.dead = True
