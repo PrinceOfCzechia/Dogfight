@@ -2,6 +2,7 @@ import pygame as pg
 import numpy as np
 import random as rn
 from typing import List
+from time import time
 from player import Player
 from bullet import Bullet
 from zeppelin import Zeppelin
@@ -72,21 +73,6 @@ explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 # carrier
 carrier_img = pg.image.load( 'assets/aircraft-carrier.png' )
 carrier = Carrier( display_width - 400, display_height - 300, carrier_img, screen )
-def explode():
-        explosions.append( Explosion( carrier.position[0] + 30, carrier.position[1] + 50,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
-        explosions.append( Explosion( carrier.position[0] + 50, carrier.position[1] + 70,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
-        explosions.append( Explosion( carrier.position[0] + 70, carrier.position[1] + 50,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
-        explosions.append( Explosion( carrier.position[0] + 90, carrier.position[1] + 70,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
-        explosions.append( Explosion( carrier.position[0] + 100, carrier.position[1] + 75,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
-        explosions.append( Explosion( carrier.position[0] + 120, carrier.position[1] + 50,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
-        explosions.append( Explosion( carrier.position[0] + 140, carrier.position[1] + 70,
-                                pg.image.load('assets\explosion.png'), carrier.screen ) )
 
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
@@ -184,7 +170,7 @@ while pl.alive() and running:
             bmb.position += bmb.delta
             bmb.period += 1
         else:
-            expl = Explosion( bmb.position[ 0 ], bmb.position[ 1 ], explosion_img, screen )
+            expl = Explosion( bmb.position[ 0 ] - 30, bmb.position[ 1 ] - 30, explosion_img, screen )
             explosions.append( expl )
             bombs.remove( bmb )
             explosion_sound.play()
@@ -219,7 +205,6 @@ while pl.alive() and running:
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
     if not carrier.dead: carrier.draw()
-    else: pass
     if carrier.hp == 1:
         carrier.draw_flames()
     for zep in airships:
@@ -228,8 +213,8 @@ while pl.alive() and running:
     for bmb in bombs: bmb.draw()
     for expl in explosions:
         if expl.visible:
-            if expl.timer < expl.duration: expl.draw()
-            expl.timer += 1
+            if time() - expl.spawn_time < expl.duration: expl.draw()
+            else: expl.visible - False
     if not en.dead: en.draw()
     pl.draw()
     display_score()
@@ -253,8 +238,8 @@ while not pl.alive() and running:
     for blt in bullets: blt.draw()
     for expl in explosions:
         if expl.visible:
-            if expl.timer < expl.duration: expl.draw()
-            if not pg.Rect.colliderect( expl.rect, pl.get_rect()): expl.timer += 1
+            if time() - expl.spawn_time < expl.duration: expl.draw()
+            else: expl.visible - False
     pl.draw()
     en.draw()
     display_score()

@@ -1,5 +1,6 @@
 import numpy as np
 import pygame as pg
+from time import time
 
 class Explosion:
     def __init__( self, x, y, img, screen ):
@@ -8,8 +9,8 @@ class Explosion:
         self.img = img
         self.screen = screen
         self.visible = True
-        self.timer = 0
-        self.duration = 150
+        self.spawn_time = time()
+        self.duration = 2
         self.rect = pg.Rect( self.x + 2, self.y + 2, 60, 60 )
 
     def draw( self ):
