@@ -58,7 +58,6 @@ bullet_sound.set_volume( 0.1 )
 empty_sound = pg.mixer.Sound( 'assets/empty.wav' )
 
 # bomb
-bomb_img = pg.image.load( 'assets/bomb.png' )
 bombs: List[ Bomb ] = []
 
 # explosion
@@ -133,7 +132,7 @@ while pl.alive() and running:
             if event.key == pg.K_b:
                 if pl.bomb_cap > 0:
                     pl.bomb_cap -= 1
-                    bombs.append( Bomb( bomb_img, screen, pl ) )
+                    bombs.append( Bomb( screen, pl ) )
                 else: pass
             if event.key == pg.K_LSHIFT or event.key == pg.K_RSHIFT:
                 crosshair.show()

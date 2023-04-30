@@ -3,8 +3,8 @@ import pygame as pg
 from player import Player
 
 class Bomb:
-    def __init__( self, img, screen, player: Player ):
-        self.img = pg.transform.rotate( img, 135 - player.angle )
+    def __init__( self, screen, player: Player ):
+        self.img = pg.transform.rotate( pg.image.load( 'assets/bomb.png' ), 135 - player.angle )
         self.screen = screen
         self.player = player
         self.period = 0
