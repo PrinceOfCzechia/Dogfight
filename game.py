@@ -175,7 +175,7 @@ while pl.alive() and running:
             if not en.dead and pg.Rect.colliderect( expl.rect, en.rect ):
                 en.kill()
                 score += 500
-                explosions.append( Explosion( en.position[ 0 ] + en.size/2, en.position[ 1 ] + en.size/2,
+                explosions.append( Explosion( en.position[ 0 ] - en.size/2, en.position[ 1 ] - en.size/2,
                                               screen ) )
                 explosion_sound.play()
             if not carrier.dead and pg.Rect.colliderect( expl.rect, carrier.rect ):
