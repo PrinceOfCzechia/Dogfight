@@ -219,7 +219,7 @@ while pl.alive() and running:
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
     if not carrier.dead: carrier.draw()
-    else: explode()
+    else: pass
     if carrier.hp == 1:
         carrier.draw_flames()
     for zep in airships:
