@@ -73,7 +73,7 @@ crosshair = Crosshair( pl, screen )
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
 pg.mixer.music.set_volume( 0.3 )
-# TODO: uncomment pg.mixer.music.play( -1, 0.0, 0 )
+pg.mixer.music.play( -1, 0.0, 0 )
 
 
 # write things
