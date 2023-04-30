@@ -3,10 +3,10 @@ import pygame as pg
 from time import time
 
 class Explosion:
-    def __init__( self, x, y, img, screen ):
+    def __init__( self, x, y, screen ):
         self.x = x
         self.y = y
-        self.img = img
+        self.img = pg.image.load( 'assets/explosion.png' )
         self.screen = screen
         self.visible = True
         self.spawn_time = time()

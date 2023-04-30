@@ -2,10 +2,10 @@ import numpy as np
 import pygame as pg
 
 class Player:
-    def __init__( self, x, y, img, screen ):
+    def __init__( self, x, y, screen ):
         self.x = x
         self.y = y
-        self.img = img
+        self.img = pg.transform.scale( pg.image.load( 'assets/plane.png' ), ( 32, 32 ) )
         self.screen = screen
         self.angle = 270.0
         self.position = np.array( [ self.x, self.y ] )
@@ -19,7 +19,7 @@ class Player:
         self.max_hp = 5
         self.hp = self.max_hp
         self.ammo = 100
-        self.bomb_cap = 9
+        self.bomb_cap = 3
         
     def draw( self ):
         rot_angle = 270 - self.angle

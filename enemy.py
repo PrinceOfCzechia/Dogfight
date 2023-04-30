@@ -3,8 +3,8 @@ import pygame as pg
 from player import Player
 
 class Enemy:
-    def __init__( self, x, y, img, screen, player: Player ):
-        self.img = img
+    def __init__( self, x, y, screen, player: Player ):
+        self.img = pg.transform.scale( pg.image.load( 'assets/tank.png' ), ( 32, 32 ) )
         self.screen = screen
         self.player = player
         self.angle = 270.0

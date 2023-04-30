@@ -10,6 +10,7 @@ from explosion import Explosion
 from enemy import Enemy
 from bomb import Bomb
 from carrier import Carrier
+from crosshair import Crosshair
 
 pg.init()
 
@@ -21,7 +22,6 @@ display_width = info.current_w
 display_height = info.current_h - 75
 score = 0
 explosion_duration = 50
-bullet_img = pg.image.load( 'assets/bullet.png' )
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
@@ -33,29 +33,25 @@ pg.display.set_icon( icon )
 pg.display.set_caption( 'DogeFight' )
 
 # player
-player_img = pg.transform.scale( pg.image.load( 'assets/plane.png' ), ( 32, 32 ) )
 player_x = 500.0
 player_y = display_height * 7/8
-pl = Player( player_x, player_y, player_img, screen )
+pl = Player( player_x, player_y, screen )
 full_heart_img = pg.image.load( 'assets/full_heart.png' )
 empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 
 # enemy
-enemy_img = pg.transform.scale( pg.image.load( 'assets/tank.png' ), ( 32, 32 ) )
 enemy_x = display_width / 3
 enemy_y = display_height / 4
-en = Enemy( enemy_x, enemy_y, enemy_img, screen, pl )
+en = Enemy( enemy_x, enemy_y, screen, pl )
 
 # zeppelin
-zep_img = pg.image.load( 'assets/zeppelin.png' )
 airships: List[ Zeppelin ] = []
 num_zep = rn.randint( 4, 8 )
 for i in range( num_zep ):
-    zep = Zeppelin( zep_img, screen, display_width, display_height )
+    zep = Zeppelin( screen, display_width, display_height )
     airships.append( zep )
 
 # bullet
-bullet_img = pg.transform.scale( pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) )
 bullets: List[ Bullet ] = []
 bullet_sound = pg.mixer.Sound( 'assets/fire.mp3' )
 bullet_sound.set_volume( 0.1 )
@@ -66,13 +62,14 @@ bomb_img = pg.image.load( 'assets/bomb.png' )
 bombs: List[ Bomb ] = []
 
 # explosion
-explosion_img = pg.image.load( 'assets/explosion.png' )
 explosions: List[ Explosion ] = []
 explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 
 # carrier
-carrier_img = pg.image.load( 'assets/aircraft-carrier.png' )
-carrier = Carrier( display_width - 400, display_height - 300, carrier_img, screen )
+carrier = Carrier( display_width - 400, display_height - 300, screen )
+
+# crosshair
+crosshair = Crosshair( pl, screen )
 
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
@@ -127,7 +124,7 @@ while pl.alive() and running:
                 pl.decrement_speed()
             if event.key == pg.K_SPACE:
                 if pl.ammo > 0:
-                    blt = Bullet( bullet_img, screen, pl )
+                    blt = Bullet( screen, pl )
                     bullets.append( blt )
                     bullet_sound.play()
                     pl.ammo -= 1
@@ -138,6 +135,8 @@ while pl.alive() and running:
                     pl.bomb_cap -= 1
                     bombs.append( Bomb( bomb_img, screen, pl ) )
                 else: pass
+            if event.key == pg.K_LSHIFT or event.key == pg.K_RSHIFT:
+                crosshair.show()
                 
         if event.type == pg.KEYUP:
             if event.key == pg.K_d or event.key == pg.K_RIGHT:
@@ -153,7 +152,7 @@ while pl.alive() and running:
                     zep.hit()
                     bullets.remove( blt )
                     if zep.dead is True:
-                        explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
+                        explosions.append( Explosion( zep.x, zep.y, screen ) )
                         explosion_sound.play()
                         score += 50
 
@@ -161,7 +160,7 @@ while pl.alive() and running:
         if not zep.dead:
             if pg.Rect.colliderect( zep.rect, pl.get_rect() ):
                 zep.kill()
-                explosions.append( Explosion( zep.x, zep.y, explosion_img, screen ) )
+                explosions.append( Explosion( zep.x, zep.y, screen ) )
                 explosion_sound.play()
                 pl.big_hit()
 
@@ -170,7 +169,7 @@ while pl.alive() and running:
             bmb.position += bmb.delta
             bmb.period += 1
         else:
-            expl = Explosion( bmb.position[ 0 ] - 30, bmb.position[ 1 ] - 30, explosion_img, screen )
+            expl = Explosion( bmb.position[ 0 ] - 30, bmb.position[ 1 ] - 30, screen )
             explosions.append( expl )
             bombs.remove( bmb )
             explosion_sound.play()
@@ -178,7 +177,7 @@ while pl.alive() and running:
                 en.kill()
                 score += 500
                 explosions.append( Explosion( en.position[ 0 ] + en.size/2, en.position[ 1 ] + en.size/2,
-                                              explosion_img, screen ) )
+                                              screen ) )
                 explosion_sound.play()
             if not carrier.dead and pg.Rect.colliderect( expl.rect, carrier.rect ):
                 carrier.hp -= 1
@@ -190,6 +189,7 @@ while pl.alive() and running:
     pl.delta[ 1 ] = pl.speed * np.sin( pl.angle * np.pi / 180 )
 
     pl.position += pl.delta
+    crosshair.update()
 
     # keep player in borders
     if pl.position[ 0 ] + 5 * pl.delta[ 0 ] < 0: pl.position[ 0 ] = 0
@@ -209,6 +209,7 @@ while pl.alive() and running:
         carrier.draw_flames()
     for zep in airships:
         if not zep.dead: zep.draw()
+    if crosshair.visible: crosshair.draw()
     for blt in bullets: blt.draw()
     for bmb in bombs: bmb.draw()
     for expl in explosions:

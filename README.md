@@ -26,10 +26,6 @@ The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` k
 Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs, text 'GAME OVER' is displayed in the middle of the screen.
 
 ### TODOs
-TODO: fix carrier bombing
-
-TODO: L_SHIFT to show/hide bomb aim
-
 TODO: add airship and tank spawning rule so they do not collide
 
-TODO: tank rotation
+TODO: tank rotation, autoaim, shooting

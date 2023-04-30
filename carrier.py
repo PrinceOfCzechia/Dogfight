@@ -3,9 +3,12 @@ import pygame as pg
 import random as rn
 
 class Carrier:
-    def __init__( self, x, y, img, screen ):
+    def __init__( self, x, y, screen ):
         self.position = np.array( [ x, y ] )
-        self.img = pg.transform.scale( pg.transform.rotate( img, rn.randint( 80, 100 ) ), ( 180, 180 ) )
+        self.img = pg.transform.scale(
+                   pg.transform.rotate(
+                   pg.image.load( 'assets/aircraft-carrier.png' ), rn.randint( 80, 100 ) ),
+                   ( 180, 180 ) )
         self.fire_img = pg.image.load( 'assets/fire.png' )
         self.screen = screen
         self.hp = 2

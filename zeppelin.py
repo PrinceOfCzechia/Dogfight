@@ -3,11 +3,11 @@ import pygame as pg
 import random as rn
 
 class Zeppelin():
-    def __init__( self, img, screen, display_w, display_h ):
+    def __init__( self, screen, display_w, display_h ):
         self.x = rn.randint( 100, display_w - 64 )
         self.y = rn.randint( 100, display_h - 564 )
         self.angle = rn.randint( 0, 179 )
-        self.img = img
+        self.img = pg.image.load( 'assets/zeppelin.png' )
         self.screen = screen
         if self.angle < 30 or self.angle > 150:
             self.rect = pg.Rect( self.x + 5, self.y + 20, 64, 40 )
