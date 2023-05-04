@@ -9,8 +9,10 @@ class Enemy:
         self.player = player
         self.angle = 180.0
         self.position = np.array( [ x, y ] )
-        self.delta = self.position - self.player.position / np.linalg.norm( self.position - self.player.position )
-        self.aim = np.array( [ np.cos(self.angle), np.sin(self.angle) ] )
+        self.delta = self.position - self.player.position \
+                   / np.linalg.norm( self.position - self.player.position )
+        self.aim = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) \
+                 / np.linalg.norm( [np.cos(self.angle),np.sin(self.angle)] )
         self.rotation_increment = 0.05
         self.direction = -1
         self.size = 32
@@ -23,6 +25,10 @@ class Enemy:
 
     def correct_direction( self ):
         if np.dot( self.aim, self.delta > 0 ): return True
+        else: return False
+
+    def correct_aim( self ):
+        if np.absolute( np.dot( self.aim, self.delta ) ) > 0.95: return True
         else: return False
 
     def kill( self ):
