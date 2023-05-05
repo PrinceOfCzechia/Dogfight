@@ -68,3 +68,9 @@ class Player:
         if self.position[ 0 ] + 5 * self.delta[ 0 ] > w - self.size: self.position[ 0 ] = w - self.size
         if self.position[ 1 ] + 5 * self.delta[ 1 ] < 0: self.position[ 1 ] = 0
         if self.position[ 1 ] + 5 * self.delta[ 1 ] > h - self.size: self.position[ 1 ] = h - self.size
+
+    def update( self ):
+        self.position += self.delta
+        self.delta[ 0 ] = self.speed * np.cos( self.angle * np.pi / 180 )
+        self.delta[ 1 ] = self.speed * np.sin( self.angle * np.pi / 180 )
+        self.angle += self.rotation
