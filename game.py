@@ -182,12 +182,7 @@ while pl.alive() and running:
                 carrier.hp -= 1
                 if carrier.hp == 0: carrier.dead = True
 
-    pl.angle += pl.rotation
-
-    pl.delta[ 0 ] = pl.speed * np.cos( pl.angle * np.pi / 180 )
-    pl.delta[ 1 ] = pl.speed * np.sin( pl.angle * np.pi / 180 )
-
-    pl.position += pl.delta
+    pl.update()
     crosshair.update()
 
     # keep player in borders
@@ -204,19 +199,19 @@ while pl.alive() and running:
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
+    if not en.dead: en.draw()
+    for bmb in bombs: bmb.draw()
+    for zep in airships:
+        if not zep.dead: zep.draw()
     if not carrier.dead: carrier.draw()
     if carrier.hp == 1:
         carrier.draw_flames()
-    for zep in airships:
-        if not zep.dead: zep.draw()
     if crosshair.visible: crosshair.draw()
     for blt in bullets: blt.draw()
-    for bmb in bombs: bmb.draw()
     for expl in explosions:
         if expl.visible:
             if time() - expl.spawn_time < expl.duration: expl.draw()
             else: expl.visible = False
-    if not en.dead: en.draw()
     pl.draw()
     display_score()
     display_stats()
