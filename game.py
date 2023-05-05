@@ -153,12 +153,13 @@ while pl.alive() and running:
                     if zep.dead is True:
                         explosions.append( Explosion( zep.x, zep.y, screen ) )
                         explosion_sound.play()
-                        score += 50
+                        score += 30
 
     for zep in airships:
         if not zep.dead:
             if pg.Rect.colliderect( zep.rect, pl.get_rect() ):
                 zep.kill()
+                score += 20
                 explosions.append( Explosion( zep.x, zep.y, screen ) )
                 explosion_sound.play()
                 pl.big_hit()
@@ -180,7 +181,9 @@ while pl.alive() and running:
                 explosion_sound.play()
             if not carrier.dead and pg.Rect.colliderect( expl.rect, carrier.rect ):
                 carrier.hp -= 1
-                if carrier.hp == 0: carrier.dead = True
+                score += 300
+                if carrier.hp == 0:
+                    carrier.dead = True
 
     pl.update()
     crosshair.update()
