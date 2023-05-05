@@ -62,3 +62,9 @@ class Player:
     def alive( self ):
         if self.hp > 0: return True
         else: return False
+
+    def check_borders( self, w, h ):
+        if self.position[ 0 ] + 5 * self.delta[ 0 ] < 0: self.position[ 0 ] = 0
+        if self.position[ 0 ] + 5 * self.delta[ 0 ] > w - self.size: self.position[ 0 ] = w - self.size
+        if self.position[ 1 ] + 5 * self.delta[ 1 ] < 0: self.position[ 1 ] = 0
+        if self.position[ 1 ] + 5 * self.delta[ 1 ] > h - self.size: self.position[ 1 ] = h - self.size

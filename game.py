@@ -191,14 +191,15 @@ while pl.alive() and running:
     crosshair.update()
 
     # keep player in borders
-    if pl.position[ 0 ] + 5 * pl.delta[ 0 ] < 0: pl.position[ 0 ] = 0
-    if pl.position[ 0 ] + 5 * pl.delta[ 0 ] > display_width - pl.size: pl.position[ 0 ] = display_width - pl.size
-    if pl.position[ 1 ] + 5 * pl.delta[ 1 ] < 0: pl.position[ 1 ] = 0
-    if pl.position[ 1 ] + 5 * pl.delta[ 1 ] > display_height - pl.size: pl.position[ 1 ] = display_height - pl.size
+    pl.check_borders( display_width, display_height )
 
     # enemy movement
-    if not en.correctDirection(): en.changeDirection()
-    en.rotate()
+    if not en.correct_direction():
+        print( 'changing rotation direction' )
+        en.change_direction()
+    if not en.correct_aim():
+        en.rotate()
+        en.update()
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
@@ -223,6 +224,8 @@ while pl.alive() and running:
 
     # the very end of the loop
     pg.display.update()
+
+
 
 # draw static images when game over
 while not pl.alive() and running:
