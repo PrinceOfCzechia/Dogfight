@@ -215,7 +215,7 @@ while pl.alive() and running:
     for expl in explosions:
         if expl.visible:
             if time() - expl.spawn_time < expl.duration: expl.draw()
-            else: expl.visible - False
+            else: expl.visible = False
     if not en.dead: en.draw()
     pl.draw()
     display_score()
