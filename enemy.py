@@ -9,12 +9,12 @@ class Enemy:
         self.player = player
         self.angle = 180.0
         self.position = np.array( [ x, y ] )
-        self.delta = self.position - self.player.position \
+        self.delta = ( self.position - self.player.position ) \
                    / np.linalg.norm( self.position - self.player.position )
-        self.aim = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) \
-                 / np.linalg.norm( [np.cos(self.angle),np.sin(self.angle)] )
-        self.rotation_increment = 0.05
-        self.direction = -1
+        self.aim = np.array( [ np.cos(self.angle), np.sin(self.angle) ] ) # already normalized
+        self.dot = np.dot( self.delta, self.aim )
+        self.rotation_increment = 1
+        self.direction = 1
         self.size = 32
         self.rect = pg.Rect( self.position, ( self.size, self.size ) )
         self.dead = False
@@ -39,6 +39,8 @@ class Enemy:
 
     def rotate( self ):
         self.angle += self.direction * self.rotation_increment
-
-    def update_aim( self ):
-        self.aim = np.array( [ np.cos(self.angle), np.sin(self.angle) ] )
+            
+    def update( self ):
+        self.aim = [ np.cos( self.angle ), np.sin( self.angle ) ]
+        self.delta = ( self.position - self.player.position ) / np.linalg.norm( self.position - self.player.position )
+        self.dot = np.dot( self.delta, self.aim )
