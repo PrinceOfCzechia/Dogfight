@@ -25,6 +25,7 @@ class Player:
         rot_angle = 270 - self.angle
         rotated = pg.transform.rotate( self.img, rot_angle )
         self.screen.blit( rotated, ( self.position[ 0 ], self.position[ 1 ] ) )
+        # pg.draw.rect( self.screen, [255,0,0], self.get_rect() )
 
     def increment_speed( self ):
         if self.speed < self.max_speed: self.speed += self.speed_increment
