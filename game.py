@@ -11,6 +11,7 @@ from enemy import Enemy
 from bomb import Bomb
 from carrier import Carrier
 from crosshair import Crosshair
+from enemy_bullet import Enemy_bullet
 
 pg.init()
 
@@ -46,7 +47,7 @@ en = Enemy( enemy_x, enemy_y, screen, pl )
 
 # zeppelin
 airships: List[ Zeppelin ] = []
-num_zep = rn.randint( 4, 8 )
+num_zep = 0 # TODO: uncomment rn.randint( 4, 8 )
 for i in range( num_zep ):
     zep = Zeppelin( screen, display_width, display_height )
     airships.append( zep )
@@ -56,6 +57,11 @@ bullets: List[ Bullet ] = []
 bullet_sound = pg.mixer.Sound( 'assets/fire.mp3' )
 bullet_sound.set_volume( 0.1 )
 empty_sound = pg.mixer.Sound( 'assets/empty.wav' )
+
+# enemy bullet
+enemy_bullets: List[ Enemy_bullet ] = []
+last_shot = time()
+hit_sound = pg.mixer.Sound( 'assets/hit.wav' )
 
 # bomb
 bombs: List[ Bomb ] = []
@@ -73,7 +79,7 @@ crosshair = Crosshair( pl, screen )
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
 pg.mixer.music.set_volume( 0.3 )
-pg.mixer.music.play( -1, 0.0, 0 )
+#pg.mixer.music.play( -1, 0.0, 0 ) TODO uncomment
 
 
 # write things
@@ -188,16 +194,27 @@ while pl.alive() and running:
     pl.update()
     crosshair.update()
 
-    # keep player in borders
+    # keep player within borders
     pl.check_borders( display_width, display_height )
 
     # enemy movement
-    if not en.correct_direction():
-        print( 'changing rotation direction' )
+    '''
+    if not en.dead and not en.correct_direction():
         en.change_direction()
-    if not en.correct_aim():
-        en.rotate()
+    '''
+    if not en.dead:
         en.update()
+        if en.correct_aim() and time() > last_shot + en.cooldown:
+            enemy_bullets.append( Enemy_bullet( screen, en ) )
+            bullet_sound.play()
+            last_shot = time()
+
+    for blt in enemy_bullets:
+        blt.position += blt.delta * blt.increment
+        if pg.Rect.colliderect( blt.get_rect(), pl.get_rect() ):
+            pl.hit()
+            hit_sound.play()
+            enemy_bullets.remove( blt )
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
@@ -211,6 +228,7 @@ while pl.alive() and running:
         carrier.draw_flames()
     if crosshair.visible: crosshair.draw()
     for blt in bullets: blt.draw()
+    for blt in enemy_bullets: blt.draw()
     for expl in explosions:
         if expl.visible:
             if time() - expl.spawn_time < expl.duration: expl.draw()
@@ -220,6 +238,7 @@ while pl.alive() and running:
     display_stats()
 
 
+    # beware
     # the very end of the loop
     pg.display.update()
 
