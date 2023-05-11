@@ -23,6 +23,8 @@ Several airships are spawned with random coordinates and rotation, once hit five
 
 The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` key plays the sound of an empty gun. Similarly, the bombs are capped at 3.
 
+Other than crashing into airships, the player can get shot by an enemy anti-aircraft gun as well. Each shot is worth 1 HP.
+
 Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs, text 'GAME OVER' is displayed in the middle of the screen.
 
 ### TODOs
@@ -30,4 +32,4 @@ TODO: relate crosshair to player's center rather than player.position
 
 TODO: add airship and tank spawning rule so they do not collide
 
-TODO: tank rotation, autoaim, shooting
+TODO: tank rotation
