@@ -12,9 +12,12 @@ class Enemy:
         self.position = np.array( [ x, y ] )
         self.delta = ( self.player.position - self.position ) / np.linalg.norm( self.player.position - self.position )
         self.aim = np.array( [ np.cos(self.angle), np.sin(self.angle) ] )
-        self.dot = np.dot( self.delta, self.aim )
+        self.perp = np.array( [ self.aim[1], -self.aim[0] ] )
+        self.dot_1 = np.dot( self.delta, self.aim )
+        self.dot_2 = np.dot( self.delta, self.perp )
         self.aim_rect = pg.Rect( self.position[0] + 100 * self.aim[0], self.position[1] + 100 * self.aim[1], 10, 10 )
         self.delta_rect = pg.Rect( self.position[0] + 100*self.delta[0], self.position[1] + 100*self.delta[1], 10, 10 )
+        self.perp_rect = pg.Rect( self.position[0] + 100 * self.perp[0], self.position[1] + 100 * self.perp[1], 10, 10 )
         self.rotation_increment = 0.1
         self.direction = 1
         self.size = 32
@@ -27,12 +30,13 @@ class Enemy:
         self.screen.blit( rotated, ( self.position[ 0 ], self.position[ 1 ] ) )
         pg.draw.rect( self.screen, [255,0,0], self.aim_rect )
         pg.draw.rect( self.screen, [0,0,255], self.delta_rect )
+        pg.draw.rect( self.screen, [0,255,0], self.perp_rect )
 
     def kill( self ):
         self.dead = True
 
     def correct_direction( self ):
-        if self.dot > 0: return True
+        if self.dot_1 > 0 and self.dot_2 > 0: return True
         else: return False
 
     def correct_aim( self ):
@@ -47,7 +51,9 @@ class Enemy:
         self.angle += self.rotation_increment * np.pi / 180 * self.direction
         self.aim = [ np.cos( self.angle ), np.sin( self.angle ) ]
         self.delta = ( self.player.position - self.position ) / np.linalg.norm( self.player.position - self.position )
-        self.dot = np.dot( self.delta, self.aim )
+        self.perp = np.array( [ self.aim[1], -self.aim[0] ] )
+        self.dot_1 = np.dot( self.delta, self.aim )
+        self.dot_2 = np.dot( self.delta, self.perp )
         self.aim_rect = pg.Rect( self.position[0] + 100*self.aim[0], self.position[1] + 100*self.aim[1], 10, 10 )
         self.delta_rect = pg.Rect( self.position[0] + 100*self.delta[0], self.position[1] + 100*self.delta[1], 10, 10 )
-    
+        self.perp_rect = pg.Rect( self.position[0] + 100 * self.perp[0], self.position[1] + 100 * self.perp[1], 10, 10 )
