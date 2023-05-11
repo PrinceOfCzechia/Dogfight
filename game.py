@@ -34,8 +34,8 @@ pg.display.set_icon( icon )
 pg.display.set_caption( 'DogeFight' )
 
 # player
-player_x = 500.0
-player_y = display_height * 7/8
+player_x = display_width/3 + rn.randint( -200, 200 )
+player_y = display_height * 9/10
 pl = Player( player_x, player_y, screen )
 full_heart_img = pg.image.load( 'assets/full_heart.png' )
 empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
@@ -79,7 +79,7 @@ crosshair = Crosshair( pl, screen )
 # background music
 pg.mixer.music.load( 'assets/bg_music.wav' )
 pg.mixer.music.set_volume( 0.3 )
-#pg.mixer.music.play( -1, 0.0, 0 ) TODO uncomment
+pg.mixer.music.play( -1, 0.0, 0 )
 
 
 # write things
@@ -220,12 +220,12 @@ while pl.alive() and running:
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
     if not en.dead: en.draw()
-    for bmb in bombs: bmb.draw()
-    for zep in airships:
-        if not zep.dead: zep.draw()
     if not carrier.dead: carrier.draw()
     if carrier.hp == 1:
         carrier.draw_flames()
+    for bmb in bombs: bmb.draw()
+    for zep in airships:
+        if not zep.dead: zep.draw()
     if crosshair.visible: crosshair.draw()
     for blt in bullets: blt.draw()
     for blt in enemy_bullets: blt.draw()
