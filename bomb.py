@@ -9,7 +9,7 @@ class Bomb:
         self.player = player
         self.period = 0
         self.delta = np.copy( player.delta ) / ( np.sqrt( self.period + 1 ) )
-        self.position = np.copy( player.position )
+        self.position = np.copy( player.center )
 
     def draw( self ):
         self.screen.blit( self.img, self.position )
