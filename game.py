@@ -255,6 +255,9 @@ while not pl.alive() and running:
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
     for zep in airships:
         if not zep.dead: zep.draw()
+        if not carrier.dead: carrier.draw()
+    if carrier.hp == 1:
+        carrier.draw_flames()
     for blt in bullets: blt.draw()
     for expl in explosions:
         if expl.visible:
