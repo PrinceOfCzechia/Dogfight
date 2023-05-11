@@ -8,7 +8,7 @@ class Enemy_bullet:
         self.y = enemy.position[ 1 ] + 8
         self.img = pg.transform.rotate(
                    pg.transform.scale(
-                   pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) ),
+                   pg.image.load( 'assets/bullet.png' ), ( 10, 10 ) ),
                    270 - enemy.angle )
         self.screen = screen
         self.position = np.array( [ self.x, self.y ] )
@@ -19,5 +19,5 @@ class Enemy_bullet:
         self.screen.blit( self.img, self.position )
 
     def get_rect( self ):
-        return pg.Rect( self.position[ 0 ], self.position[ 1 ], 4, 4 )
+        return pg.Rect( self.position[ 0 ], self.position[ 1 ], 8, 8 )
 
