@@ -9,6 +9,7 @@ class Player:
         self.screen = screen
         self.angle = 270.0
         self.position = np.array( [ self.x, self.y ] )
+        self.center = self.position + 8
         self.speed = 0.6
         self.max_speed = 0.8
         self.min_speed = 0.4
