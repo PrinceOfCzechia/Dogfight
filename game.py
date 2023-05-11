@@ -197,12 +197,9 @@ while pl.alive() and running:
     # keep player within borders
     pl.check_borders( display_width, display_height )
 
-    # enemy movement
-    '''
-    if not en.dead and not en.correct_direction():
-        en.change_direction()
-    '''
+    # enemy handling
     if not en.dead:
+        en.check_change()
         en.update()
         if en.correct_aim() and time() > last_shot + en.cooldown:
             enemy_bullets.append( Enemy_bullet( screen, en ) )
