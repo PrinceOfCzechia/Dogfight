@@ -9,7 +9,9 @@ class Player:
         self.screen = screen
         self.angle = 270.0
         self.position = np.array( [ self.x, self.y ] )
-        self.center = self.position + 8
+        self.center = self.position + 16
+        self.rot_matrix = np.array( [[ np.cos(self.angle*np.pi/180), -np.sin(self.angle*np.pi/180) ],
+                                     [ np.sin(self.angle*np.pi/180), np.cos(self.angle*np.pi/180) ]] )
         self.speed = 0.6
         self.max_speed = 0.8
         self.min_speed = 0.4
@@ -47,7 +49,7 @@ class Player:
         else: return 0.33
 
     def get_rect( self ):
-        return pg.Rect( self.position, ( self.size - 4, self.size - 4 ) )
+        return pg.Rect( self.center, ( self.size - 4, self.size - 4 ) )
     
     def hit( self ):
         self.hp -= 1
@@ -72,7 +74,12 @@ class Player:
         if self.position[ 1 ] + 5 * self.delta[ 1 ] > h - self.size: self.position[ 1 ] = h - self.size
 
     def update( self ):
+        a = self.angle
+        s = self.speed
         self.position += self.delta
-        self.delta[ 0 ] = self.speed * np.cos( self.angle * np.pi / 180 )
-        self.delta[ 1 ] = self.speed * np.sin( self.angle * np.pi / 180 )
+        self.center = self.position + 16 * np.dot( self.delta, self.rot_matrix )
+        self.delta[ 0 ] = s * np.cos( a * np.pi / 180 )
+        self.delta[ 1 ] = s * np.sin( a * np.pi / 180 )
         self.angle += self.rotation
+        self.rot_matrix = np.array( [[ np.cos(a*np.pi/180), -np.sin(a*np.pi/180) ],
+                                     [ np.sin(a*np.pi/180), np.cos(a*np.pi/180) ]] )
