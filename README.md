@@ -1,6 +1,8 @@
 # Dogfight
 A little pygame-based game I made. Control a plane, shoot things, pretty straightforward.
 
+![Gameplay example](assets/demo.png)
+
 ### Controls
 So far, a plane can be controlled as follows:
 
