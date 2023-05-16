@@ -49,7 +49,7 @@ en = Enemy( enemy_x, enemy_y, screen, pl )
 airships: List[ Zeppelin ] = []
 num_zep = 0 # TODO: uncomment rn.randint( 4, 8 )
 for i in range( num_zep ):
-    zep = Zeppelin( screen, display_width, display_height )
+    zep = Zeppelin( screen, display_width, display_height, i+1, num_zep )
     airships.append( zep )
 
 # bullet

@@ -3,8 +3,9 @@ import pygame as pg
 import random as rn
 
 class Zeppelin():
-    def __init__( self, screen, display_w, display_h ):
-        self.x = rn.randint( 100, display_w - 64 )
+    def __init__( self, screen, display_w, display_h, n, N ):
+        self.x = rn.randint( int((display_w - 164 - 100) * n / N),
+                             int((display_w - 164 - 100) * n / N + 100) )
         self.y = rn.randint( 100, display_h - 564 )
         self.angle = rn.randint( 0, 179 )
         self.img = pg.image.load( 'assets/zeppelin.png' )
