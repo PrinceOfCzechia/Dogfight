@@ -13,8 +13,8 @@ class Enemy:
         self.center = np.array( [ x+16, y+16 ] )
         self.delta = ( self.player.position - self.center ) / np.linalg.norm( self.player.position - self.center )
         self.aim = np.array( [ np.cos(self.angle-90), np.sin(self.angle-90) ] )
-        self.L_aim = np.array( [ np.cos(self.angle-90), np.sin(self.angle-90) ] )
-        self.R_aim = np.array( [ np.cos(self.angle-89) , np.sin(self.angle-89) ] )
+        self.L_aim = np.array( [ np.cos(self.angle-90.1), np.sin(self.angle-90.1) ] )
+        self.R_aim = np.array( [ np.cos(self.angle-89.9), np.sin(self.angle-89.9) ] )
         self.backward = -1 * self.aim
         self.aim_rect = pg.Rect( self.center[0] + 100 * self.aim[0], self.center[1] + 100 * self.aim[1], 10, 10 )
         self.L_rect = pg.Rect( self.center[0] + 100 * self.L_aim[0], self.center[1] + 100 * self.L_aim[1], 10, 10 )
@@ -23,7 +23,7 @@ class Enemy:
         self.backward_rect = pg.Rect( self.center[0] + 100 * self.backward[0],
                                       self.center[1] + 100 * self.backward[1],
                                       5, 5 )
-        self.rotation_increment = 0.07
+        self.rotation_increment = 0.1
         self.direction = -1
         self.size = 32
         self.rect = pg.Rect( self.position, ( self.size, self.size ) )
@@ -36,11 +36,11 @@ class Enemy:
     def draw( self ):
         rotated = pg.transform.rotate( self.img, self.draw_angle )
         self.screen.blit( rotated, ( self.position[ 0 ], self.position[ 1 ] ) )
-        pg.draw.rect( self.screen, [255,0,0], self.aim_rect )
-        pg.draw.rect( self.screen, [0,0,255], self.delta_rect )
-        pg.draw.rect( self.screen, [0,255,0], self.backward_rect )
-        pg.draw.rect( self.screen, [255,255,0], self.L_rect )
-        pg.draw.rect( self.screen, [255,0,255], self.R_rect )
+        # pg.draw.rect( self.screen, [255,0,0], self.aim_rect )
+        # pg.draw.rect( self.screen, [0,0,255], self.delta_rect )
+        # pg.draw.rect( self.screen, [0,255,0], self.backward_rect )
+        # pg.draw.rect( self.screen, [255,255,0], self.L_rect )
+        # pg.draw.rect( self.screen, [255,0,255], self.R_rect )
 
     def kill( self ):
         self.dead = True
