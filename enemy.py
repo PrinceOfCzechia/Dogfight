@@ -10,7 +10,7 @@ class Enemy:
         self.angle = 180.0
         self.draw_angle = 180 / np.pi + 90
         self.position = np.array( [ x, y ] )
-        self.center = np.array( [ x+8, y+8 ] )
+        self.center = np.array( [ x+16, y+16 ] )
         self.delta = ( self.player.position - self.center ) / np.linalg.norm( self.player.position - self.center )
         self.aim = np.array( [ np.cos(self.angle-90), np.sin(self.angle-90) ] )
         self.L_aim = np.array( [ np.cos(self.angle-90), np.sin(self.angle-90) ] )
