@@ -17,7 +17,6 @@ class Carrier:
 
     def draw( self ):
         self.screen.blit( self.img, self.position )
-        # uncomment to see self.rect
         # pg.draw.rect( self.screen, [255,0,0], self.rect )
 
     def draw_flames( self ):
