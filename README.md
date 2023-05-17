@@ -1,6 +1,6 @@
 # Dogfight
 
-A little pygame-based game I made. Control a plane, shoot things, pretty straightforward.
+A little pygame-based game I made. Control a plane, shoot things, do not get shot by other things. Pretty straightforward.
 
 ![Gameplay example](assets/demo.png)
 
@@ -9,6 +9,8 @@ A little pygame-based game I made. Control a plane, shoot things, pretty straigh
 - python 3
 - numpy
 - pygame
+
+I sort of suppose a potential user already has python. The libraries can be installed simply with `pip install <name_of_the_library>`.
 
 ### Controls
 
@@ -30,13 +32,17 @@ So far, a plane can be controlled as follows:
 
 ### Mechanics
 
-Several airships are spawned with random coordinates and rotation, once hit five times by a bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
+The player, since it is a plane, is always moving forward, its direction can however be altered by `A` and `D`.
+
+The plaing field is bordered by what you can see on the screen, no more map loads if the player reaches the border. Instead, the player gets stuck in the direction of the border and depending on the angle between the player and the border, the player moves to the left or right. Rotation is still fully supported, so it is possible to return.
+
+Several airships are spawned with random coordinates and rotation. Once hit five times by a player's bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
 
 The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` key plays the sound of an empty gun. Similarly, the bombs are capped at 5.
 
-Other than crashing into airships, the player can get shot by an enemy anti-aircraft gun as well. Each shot is worth 1 HP. According to difficulty, which is currently hardcoded, there can be 0, 1, 2 or 3 anti-aircraft guns.
+Other than crashing into airships, the player can lose HP by getting shot by an enemy anti-aircraft gun as well. Each shot is worth 1 HP. According to difficulty, which is currently hardcoded, there can be 0, 1, 2 or 3 anti-aircraft guns.
 
-Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs, text 'GAME OVER' is displayed in the middle of the screen.
+Once the player's HP drops to zero, the game loop stops. If any explosions are currently present, their time still runs and they fade away like they normallu would. Text 'GAME OVER' is displayed in the middle of the screen.
 
 ### AI
 
@@ -50,7 +56,3 @@ A simple rule based AI powers the anti-aircraft guns. Based on several possible 
 If the RED and BLUE rectangles collide, the gun fires
 
 ![Illustration of the AI](assets/AI_demo.png)
-
-### TODOs
-
-TODO: add tank spawning rule

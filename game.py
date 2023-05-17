@@ -70,6 +70,8 @@ hit_sound = pg.mixer.Sound( 'assets/hit.wav' )
 
 # bomb
 bombs: List[ Bomb ] = []
+full_bomb_img = pg.transform.rotate( pg.image.load( 'assets/bomb.png' ), 0 )
+empty_bomb_img = pg.transform.rotate( pg.image.load( 'assets/empty_bomb.png' ), 0 )
 
 # explosion
 explosions: List[ Explosion ] = []
@@ -102,10 +104,6 @@ def display_stats():
     ammo_string = 'ammo: ' + str( pl.ammo )
     ammo_surface = font_std.render( ammo_string, True, (220,220,220) )
     screen.blit( ammo_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-80 ) )
-    # bombs
-    bomb_string = 'bombs left: ' + str( pl.bomb_cap )
-    bomb_surface = font_std.render( bomb_string, True, (220,220,220) )
-    screen.blit( bomb_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-110 ) )
 
 def display_over():
     sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA)
@@ -140,8 +138,8 @@ while pl.hp > 0 and running:
                 else:
                     empty_sound.play()
             if event.key == pg.K_b:
-                if pl.bomb_cap > 0:
-                    pl.bomb_cap -= 1
+                if pl.current_bombs > 0:
+                    pl.current_bombs -= 1
                     bombs.append( Bomb( screen, pl ) )
                 else: pass
             if event.key == pg.K_LSHIFT or event.key == pg.K_RSHIFT:
@@ -172,7 +170,7 @@ while pl.hp > 0 and running:
                 score += 20
                 explosions.append( Explosion( zep.x, zep.y, screen ) )
                 explosion_sound.play()
-                pl.hp -= 2
+                pl.hp = np.maximum( pl.hp-2, 0 )
 
     for bmb in bombs:
         if bmb.period < 200:
@@ -223,6 +221,7 @@ while pl.hp > 0 and running:
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 130 )
+    pl.draw_bombs( full_bomb_img, empty_bomb_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 110 )
     for en in enemies:
         if not en.dead: en.draw()
     if not carrier.dead: carrier.draw()
@@ -258,6 +257,7 @@ while not pl.hp > 0 and running:
 
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 130 )
+    pl.draw_bombs( full_bomb_img, empty_bomb_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 110 )
     for zep in airships:
         if not zep.dead: zep.draw()
         if not carrier.dead: carrier.draw()
