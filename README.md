@@ -32,6 +32,6 @@ Once the player's HP drops to zero, the game loop stops. If any explosions are c
 ### TODOs
 TODO: relate crosshair to player's center rather than player.position
 
-TODO: add airship and tank spawning rule so they do not collide
+TODO: add tank spawning rule
 
-TODO: tank rotation
+TODO: add multiple enemies
