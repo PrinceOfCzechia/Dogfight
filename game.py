@@ -22,7 +22,7 @@ running = True
 display_width = info.current_w
 display_height = info.current_h - 75
 score = 0
-explosion_duration = 50
+difficulty = 3
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
@@ -41,13 +41,18 @@ full_heart_img = pg.image.load( 'assets/full_heart.png' )
 empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 
 # enemy
-enemy_x = display_width / 3
-enemy_y = display_height / 4
-en = Enemy( enemy_x, enemy_y, screen, pl )
+enemies: List[ Enemy ] = []
+enemy_x1 = display_width / 3
+enemy_x2 = display_width * 5 / 9
+enemy_y1 = display_height / 4
+enemy_y2 = display_height * 3 / 4
+if difficulty > 0: enemies.append( Enemy( enemy_x1, enemy_y1, screen, pl ) )
+if difficulty > 1: enemies.append( Enemy( enemy_x1, enemy_y2, screen, pl ) )
+if difficulty > 2: enemies.append( Enemy( enemy_x2, enemy_y1, screen, pl ) )
 
 # zeppelin
 airships: List[ Zeppelin ] = []
-num_zep = 0 # TODO: uncomment rn.randint( 4, 8 )
+num_zep = rn.randint( 4, 8 )
 for i in range( num_zep ):
     zep = Zeppelin( screen, display_width, display_height, i+1, num_zep )
     airships.append( zep )
@@ -179,12 +184,14 @@ while pl.alive() and running:
             explosions.append( expl )
             bombs.remove( bmb )
             explosion_sound.play()
-            if not en.dead and pg.Rect.colliderect( expl.rect, en.rect ):
-                en.kill()
-                score += 500
-                explosions.append( Explosion( en.position[ 0 ] - en.size/2, en.position[ 1 ] - en.size/2,
-                                              screen ) )
-                explosion_sound.play()
+            for en in enemies:
+                if not en.dead and pg.Rect.colliderect( expl.rect, en.rect ):
+                    en.kill()
+                    score += 500
+                    explosions.append( Explosion( en.position[ 0 ] - en.size/2,
+                                                  en.position[ 1 ] - en.size/2,
+                                                  screen ) )
+                    explosion_sound.play()
             if not carrier.dead and pg.Rect.colliderect( expl.rect, carrier.rect ):
                 carrier.hp -= 1
                 score += 300
@@ -198,13 +205,14 @@ while pl.alive() and running:
     pl.check_borders( display_width, display_height )
 
     # enemy handling
-    if not en.dead:
-        en.check_change()
-        en.update()
-        if en.correct_aim() and time() > last_shot + en.cooldown:
-            enemy_bullets.append( Enemy_bullet( screen, en ) )
-            bullet_sound.play()
-            last_shot = time()
+    for en in enemies:
+        if not en.dead:
+            en.check_change()
+            en.update()
+            if en.correct_aim() and time() > last_shot + en.cooldown:
+                enemy_bullets.append( Enemy_bullet( screen, en ) )
+                bullet_sound.play()
+                last_shot = time()
 
     for blt in enemy_bullets:
         blt.position += blt.delta * blt.increment
@@ -216,7 +224,8 @@ while pl.alive() and running:
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
-    if not en.dead: en.draw()
+    for en in enemies:
+        if not en.dead: en.draw()
     if not carrier.dead: carrier.draw()
     if carrier.hp == 1:
         carrier.draw_flames()
@@ -261,7 +270,8 @@ while not pl.alive() and running:
             if time() - expl.spawn_time < expl.duration: expl.draw()
             else: expl.visible - False
     pl.draw()
-    en.draw()
+    for en in enemies:
+        if not en.dead: en.draw()
     display_score()
     display_stats()
     display_over()
