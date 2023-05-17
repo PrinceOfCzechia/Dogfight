@@ -4,6 +4,12 @@ A little pygame-based game I made. Control a plane, shoot things, pretty straigh
 
 ![Gameplay example](assets/demo.png)
 
+### Dependencies
+
+- python 3
+- numpy
+- pygame
+
 ### Controls
 
 So far, a plane can be controlled as follows:
