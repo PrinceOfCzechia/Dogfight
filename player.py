@@ -50,12 +50,6 @@ class Player:
     def get_rect( self ):
         return pg.Rect( self.center, ( self.size - 4, self.size - 4 ) )
     
-    def hit( self ):
-        self.hp -= 1
-
-    def big_hit( self ):
-        self.hp -= 2
-
     def draw_hearts( self, full: pg.image, empty: pg.image, x_coordinate, y_coordinate ):
         for i in range( self.hp ):
             self.screen.blit( full, ( x_coordinate - 20 * i, y_coordinate ) )

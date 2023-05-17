@@ -22,7 +22,7 @@ running = True
 DISPLAY_WIDTH = info.current_w
 DISPLAY_HEIGHT = info.current_h - 75
 score = 0
-DIFFICULTY = 0
+DIFFICULTY = 3
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
@@ -172,7 +172,7 @@ while pl.hp > 0 and running:
                 score += 20
                 explosions.append( Explosion( zep.x, zep.y, screen ) )
                 explosion_sound.play()
-                pl.big_hit()
+                pl.hp -= 2
 
     for bmb in bombs:
         if bmb.period < 200:
@@ -216,7 +216,7 @@ while pl.hp > 0 and running:
     for blt in enemy_bullets:
         blt.position += blt.delta * blt.increment
         if pg.Rect.colliderect( blt.get_rect(), pl.get_rect() ):
-            pl.hit()
+            pl.hp -= 1
             hit_sound.play()
             enemy_bullets.remove( blt )
     
@@ -250,7 +250,7 @@ while pl.hp > 0 and running:
 
 
 # draw static images when game over
-while not pl.alive() and running:
+while not pl.hp > 0 and running:
     for event in pg.event.get():
         # QUIT button
         if event.type == pg.QUIT:
