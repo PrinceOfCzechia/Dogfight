@@ -23,6 +23,7 @@ class Player:
         self.hp = self.max_hp
         self.ammo = 100
         self.bomb_cap = 5
+        self.current_bombs = self.bomb_cap
         
     def draw( self ):
         rot_angle = 270 - self.angle
@@ -55,6 +56,12 @@ class Player:
             self.screen.blit( full, ( x_coordinate - 20 * i, y_coordinate ) )
         for i in range( self.max_hp - self.hp ):
             self.screen.blit( empty, ( x_coordinate - 20 * ( self.max_hp - 1 - i ), y_coordinate ) )
+
+    def draw_bombs( self, full: pg.image, empty: pg.image, x_coordinate, y_coordinate ):
+        for i in range( self.current_bombs ):
+            self.screen.blit( full, ( x_coordinate - 20 * i, y_coordinate ) )
+        for i in range( self.bomb_cap - self.current_bombs ):
+            self.screen.blit( empty, ( x_coordinate - 20 * ( self.bomb_cap - 1 - i ), y_coordinate ) )
 
     def check_borders( self, w, h ):
         if self.position[ 0 ] + 5 * self.delta[ 0 ] < 0: self.position[ 0 ] = 0
