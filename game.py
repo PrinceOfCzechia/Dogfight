@@ -19,42 +19,42 @@ pg.init()
 info = pg.display.Info()
 pg.mixer.init()
 running = True
-display_width = info.current_w
-display_height = info.current_h - 75
+DISPLAY_WIDTH = info.current_w
+DISPLAY_HEIGHT = info.current_h - 75
 score = 0
-difficulty = 3
+DIFFICULTY = 0
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
 
 # display size, name, icon
-screen = pg.display.set_mode( ( display_width, display_height ) )
+screen = pg.display.set_mode( ( DISPLAY_WIDTH, DISPLAY_HEIGHT ) )
 icon = pg.image.load( 'assets/joystick.png' )
 pg.display.set_icon( icon )
 pg.display.set_caption( 'DogeFight' )
 
 # player
-player_x = display_width/3 + rn.randint( -200, 200 )
-player_y = display_height * 9/10
+player_x = DISPLAY_WIDTH/2 + rn.randint( -200, 200 )
+player_y = DISPLAY_HEIGHT * 9/10
 pl = Player( player_x, player_y, screen )
 full_heart_img = pg.image.load( 'assets/full_heart.png' )
 empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
 
 # enemy
 enemies: List[ Enemy ] = []
-enemy_x1 = display_width / 3
-enemy_x2 = display_width * 5 / 9
-enemy_y1 = display_height / 4
-enemy_y2 = display_height * 3 / 4
-if difficulty > 0: enemies.append( Enemy( enemy_x1, enemy_y1, screen, pl ) )
-if difficulty > 1: enemies.append( Enemy( enemy_x1, enemy_y2, screen, pl ) )
-if difficulty > 2: enemies.append( Enemy( enemy_x2, enemy_y1, screen, pl ) )
+enemy_x1 = DISPLAY_WIDTH / 4
+enemy_x2 = DISPLAY_WIDTH * 4 / 9
+enemy_y1 = DISPLAY_HEIGHT / 4
+enemy_y2 = DISPLAY_HEIGHT * 3 / 4
+if DIFFICULTY > 0: enemies.append( Enemy( enemy_x1, enemy_y1, screen, pl ) )
+if DIFFICULTY > 1: enemies.append( Enemy( enemy_x1, enemy_y2, screen, pl ) )
+if DIFFICULTY > 2: enemies.append( Enemy( enemy_x2, enemy_y1, screen, pl ) )
 
 # zeppelin
 airships: List[ Zeppelin ] = []
 num_zep = rn.randint( 4, 8 )
 for i in range( num_zep ):
-    zep = Zeppelin( screen, display_width, display_height, i+1, num_zep )
+    zep = Zeppelin( screen, DISPLAY_WIDTH, DISPLAY_HEIGHT, i+1, num_zep )
     airships.append( zep )
 
 # bullet
@@ -76,7 +76,7 @@ explosions: List[ Explosion ] = []
 explosion_sound = pg.mixer.Sound( 'assets/explosion_sound.wav' )
 
 # carrier
-carrier = Carrier( display_width - 400, display_height - 300, screen )
+carrier = Carrier( DISPLAY_WIDTH - 400, DISPLAY_HEIGHT - 300, screen )
 
 # crosshair
 crosshair = Crosshair( pl, screen )
@@ -97,27 +97,26 @@ def display_stats():
     # speed
     speed_string = 'speed: ' + str( int( np.round(pl.speed * 1000, -1) ) )
     speed_surface = font_std.render( speed_string, True, (220,220,220) )
-    screen.blit( speed_surface, ( display_width-120, display_height-50 ) )
+    screen.blit( speed_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-50 ) )
     # ammo
     ammo_string = 'ammo: ' + str( pl.ammo )
     ammo_surface = font_std.render( ammo_string, True, (220,220,220) )
-    screen.blit( ammo_surface, ( display_width-120, display_height-80 ) )
+    screen.blit( ammo_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-80 ) )
     # bombs
     bomb_string = 'bombs left: ' + str( pl.bomb_cap )
     bomb_surface = font_std.render( bomb_string, True, (220,220,220) )
-    screen.blit( bomb_surface, ( display_width-120, display_height-110 ) )
+    screen.blit( bomb_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-110 ) )
 
 def display_over():
-    sf = pg.Surface( (display_width, display_height), pg.SRCALPHA)
+    sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA)
     filler = pg.Color( 0, 100, 100, 96 )
     sf.fill( filler )
     screen.blit( sf, (0, 0) )
-    over_string = 'game over'
-    text_surface = font_big.render( over_string, True, (220,220,220) )
-    screen.blit( text_surface, ( display_width/2 - 100, display_height/2 - 20 ) )
+    text_surface = font_big.render( 'game over', True, (220,220,220) )
+    screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 20 ) )
 
 # game loop
-while pl.alive() and running:
+while pl.hp > 0 and running:
     for event in pg.event.get():
         # QUIT button
         if event.type == pg.QUIT:
@@ -202,7 +201,7 @@ while pl.alive() and running:
     crosshair.update()
 
     # keep player within borders
-    pl.check_borders( display_width, display_height )
+    pl.check_borders( DISPLAY_WIDTH, DISPLAY_HEIGHT )
 
     # enemy handling
     for en in enemies:
@@ -223,7 +222,7 @@ while pl.alive() and running:
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
-    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
+    pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 130 )
     for en in enemies:
         if not en.dead: en.draw()
     if not carrier.dead: carrier.draw()
@@ -258,7 +257,7 @@ while not pl.alive() and running:
             running = False
 
     screen.blit( bg_img, ( 0, 0 ) )
-    pl.draw_hearts( full_heart_img, empty_heart_img, display_width - 40, display_height - 130 )
+    pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 130 )
     for zep in airships:
         if not zep.dead: zep.draw()
         if not carrier.dead: carrier.draw()

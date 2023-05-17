@@ -39,7 +39,6 @@ class Player:
         if self.speed < self.min_speed: self.speed = self.min_speed
 
     def get_rotation_increment( self ):
-        # TODO: make the magic numbers a function
         if self.speed > 0.75: return 0.15
         if self.speed > 0.7: return 0.18
         if self.speed > 0.65: return 0.21
@@ -63,10 +62,6 @@ class Player:
         for i in range( self.max_hp - self.hp ):
             self.screen.blit( empty, ( x_coordinate - 20 * ( self.max_hp - 1 - i ), y_coordinate ) )
 
-    def alive( self ):
-        if self.hp > 0: return True
-        else: return False
-
     def check_borders( self, w, h ):
         if self.position[ 0 ] + 5 * self.delta[ 0 ] < 0: self.position[ 0 ] = 0
         if self.position[ 0 ] + 5 * self.delta[ 0 ] > w - self.size: self.position[ 0 ] = w - self.size
@@ -77,7 +72,7 @@ class Player:
         a = self.angle
         s = self.speed
         self.position += self.delta
-        self.center = self.position + 16 * np.dot( self.delta, self.rot_matrix )
+        self.center = self.position + 8 * np.dot( self.delta, self.rot_matrix )
         self.delta[ 0 ] = s * np.cos( a * np.pi / 180 )
         self.delta[ 1 ] = s * np.sin( a * np.pi / 180 )
         self.angle += self.rotation
