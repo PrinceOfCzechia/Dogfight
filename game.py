@@ -220,7 +220,7 @@ while pl.hp > 0 and running:
     
     # draw things
     screen.blit( bg_img, ( 0, 0 ) )
-    pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 130 )
+    pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 140 )
     pl.draw_bombs( full_bomb_img, empty_bomb_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 110 )
     for en in enemies:
         if not en.dead: en.draw()
@@ -256,7 +256,7 @@ while not pl.hp > 0 and running:
             running = False
 
     screen.blit( bg_img, ( 0, 0 ) )
-    pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 130 )
+    pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 140 )
     pl.draw_bombs( full_bomb_img, empty_bomb_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 110 )
     for zep in airships:
         if not zep.dead: zep.draw()
