@@ -8,7 +8,7 @@ class Bullet:
         self.y = player.center[ 1 ]
         self.img = pg.transform.rotate(
                    pg.transform.scale(
-                   pg.image.load( 'assets/bullet.png' ), ( 6, 6 ) ),
+                   pg.image.load( 'assets/bullet.png' ), ( 8, 8 ) ),
                    270.0 - player.angle )
         self.screen = screen
         self.position = np.array( [ self.x, self.y ] )
