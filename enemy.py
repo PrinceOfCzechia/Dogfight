@@ -13,20 +13,25 @@ class Enemy:
         self.center = np.array( [ x+8, y+8 ] )
         self.delta = ( self.player.position - self.center ) / np.linalg.norm( self.player.position - self.center )
         self.aim = np.array( [ np.cos(self.angle-90), np.sin(self.angle-90) ] )
+        self.L_aim = np.array( [ np.cos(self.angle-90), np.sin(self.angle-90) ] )
+        self.R_aim = np.array( [ np.cos(self.angle-89) , np.sin(self.angle-89) ] )
         self.backward = -1 * self.aim
         self.aim_rect = pg.Rect( self.center[0] + 100 * self.aim[0], self.center[1] + 100 * self.aim[1], 10, 10 )
+        self.L_rect = pg.Rect( self.center[0] + 100 * self.L_aim[0], self.center[1] + 100 * self.L_aim[1], 10, 10 )
+        self.R_rect = pg.Rect( self.center[0] + 100 * self.R_aim[0], self.center[1] + 100 * self.R_aim[1], 10, 10 )
         self.delta_rect = pg.Rect( self.center[0] + 100*self.delta[0], self.center[1] + 100*self.delta[1], 10, 10 )
         self.backward_rect = pg.Rect( self.center[0] + 100 * self.backward[0],
                                       self.center[1] + 100 * self.backward[1],
                                       5, 5 )
-        self.rotation_increment = 0.1
+        self.rotation_increment = 0.07
         self.direction = -1
         self.size = 32
         self.rect = pg.Rect( self.position, ( self.size, self.size ) )
         self.dead = False
         self.cooldown = 0.2
-        self.forward_collision = False
         self.backward_collision = False
+        self.L_collision = False
+        self.R_collision = False
         
     def draw( self ):
         rotated = pg.transform.rotate( self.img, self.draw_angle )
@@ -34,6 +39,8 @@ class Enemy:
         pg.draw.rect( self.screen, [255,0,0], self.aim_rect )
         pg.draw.rect( self.screen, [0,0,255], self.delta_rect )
         pg.draw.rect( self.screen, [0,255,0], self.backward_rect )
+        pg.draw.rect( self.screen, [255,255,0], self.L_rect )
+        pg.draw.rect( self.screen, [255,0,255], self.R_rect )
 
     def kill( self ):
         self.dead = True
@@ -48,13 +55,16 @@ class Enemy:
         else:
             if self.backward_collision: self.change_direction()
             self.backward_collision = False
-        '''
-        if self.correct_aim():
-            self.forward_collision = True
+        if pg.Rect.colliderect( self.delta_rect, self.L_rect ):
+            self.L_collision = True
         else:
-            if self.forward_collision: self.change_direction()
-            self.forward_collision = False
-        '''
+            if self.L_collision and self.direction == 1: self.change_direction()
+            self.L_collision = False
+        if pg.Rect.colliderect( self.delta_rect, self.R_rect ):
+            self.R_collision = True
+        else:
+            if self.R_collision and self.direction == -1: self.change_direction()
+            self.R_collision = False
 
     def change_direction( self ):
         self.direction = self.direction * -1
@@ -63,11 +73,19 @@ class Enemy:
         self.draw_angle -= self.rotation_increment * self.direction
         self.angle += self.rotation_increment * np.pi / 180 * self.direction
         self.aim = [ np.cos( self.angle-90 ), np.sin( self.angle-90 ) ]
+        self.L_aim = [ np.cos(self.angle-90.1) , np.sin(self.angle-90.1) ]
+        self.R_aim = [ np.cos(self.angle-89.9) , np.sin(self.angle-89.9) ]
         self.backward = [ -np.cos( self.angle-90 ), -np.sin( self.angle-90 ) ]
         self.delta = ( self.player.position - self.center ) / np.linalg.norm( self.player.position - self.center )
         self.aim_rect = pg.Rect( self.center[0] + 100*self.aim[0],
                                  self.center[1] + 100*self.aim[1],
                                  10, 10 )
+        self.L_rect = pg.Rect( self.center[0] + 100 * self.L_aim[0],
+                               self.center[1] + 100 * self.L_aim[1],
+                               10, 10 )
+        self.R_rect = pg.Rect( self.center[0] + 100 * self.R_aim[0],
+                               self.center[1] + 100 * self.R_aim[1],
+                               10, 10 )
         self.delta_rect = pg.Rect( self.center[0] + 100*self.delta[0],
                                    self.center[1] + 100*self.delta[1],
                                    10, 10 )
