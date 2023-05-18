@@ -1,4 +1,7 @@
 import pygame as pg
+import pygame_widgets as pw
+from pygame_widgets.button import Button
+from pygame_widgets.dropdown import Dropdown
 import numpy as np
 import random as rn
 from typing import List
@@ -19,10 +22,13 @@ pg.init()
 info = pg.display.Info()
 pg.mixer.init()
 running = True
+menu = True
+options = False
+playing = False
 DISPLAY_WIDTH = info.current_w
 DISPLAY_HEIGHT = info.current_h - 75
 score = 0
-DIFFICULTY = 3
+DIFFICULTY = 0
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
@@ -32,6 +38,70 @@ screen = pg.display.set_mode( ( DISPLAY_WIDTH, DISPLAY_HEIGHT ) )
 icon = pg.image.load( 'assets/joystick.png' )
 pg.display.set_icon( icon )
 pg.display.set_caption( 'DogeFight' )
+sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA )
+sf.fill( pg.Color( 60, 130, 100, 96 ) )
+
+# main menu functions
+def start_game():
+    global menu, playing, DIFFICULTY
+    menu = False
+    playing = True
+    if options_dropdown.getSelected() is not None:
+        DIFFICULTY = options_dropdown.getSelected()
+    else: DIFFICULTY = 1
+
+def display_options():
+    global options, menu
+    menu = False
+    options = True
+
+def quit_game():
+    global menu
+    menu = False
+
+# main menu elements
+start_button = Button(
+    screen,
+    DISPLAY_WIDTH/3, DISPLAY_HEIGHT*3/16,
+    DISPLAY_WIDTH/3, DISPLAY_HEIGHT/8,
+    text = 'Play',
+    font = font_big, textColour = ( 230, 230, 230 ),
+    margin = 20, radius = 5,
+    inactiveColour = ( 40, 110, 80 ), hoverColour = ( 20, 20, 20 ),
+    onClick = lambda: start_game()
+)
+
+options_dropdown = Dropdown(
+    screen,
+    DISPLAY_WIDTH/3, DISPLAY_HEIGHT*6/16,
+    DISPLAY_WIDTH/3, DISPLAY_HEIGHT/8,
+    name='Select difficulty',
+    choices=[ 'Easy', 'Medium', 'Hard', 'Insane' ],
+    values = [ 0, 1, 2, 3 ],
+    font = font_big, textColour = ( 230, 230, 230 ),
+    borderRadius = 5, colour = ( 40, 110, 80 ), hoverColour = ( 20, 20, 20 ), direction = 'down'
+)
+
+quit_button = Button(
+    screen,
+    DISPLAY_WIDTH/3, DISPLAY_HEIGHT*9/16,
+    DISPLAY_WIDTH/3, DISPLAY_HEIGHT/8,
+    text = 'Quit',
+    font = font_big, textColour = ( 230, 230, 230 ),
+    margin = 20, radius = 5,
+    inactiveColour = ( 40, 110, 80 ), hoverColour = ( 20, 20, 20 ),
+    onClick = lambda: quit_game()
+)
+
+# main menu loop
+while menu:
+    screen.blit( sf, (0, 0) )
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            menu = False
+        
+    pw.update( pg.event.get() )
+    pg.display.update()
 
 # player
 player_x = DISPLAY_WIDTH/2 + rn.randint( -200, 200 )
@@ -106,19 +176,18 @@ def display_stats():
     screen.blit( ammo_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-80 ) )
 
 def display_over():
-    sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA)
-    filler = pg.Color( 0, 100, 100, 96 )
-    sf.fill( filler )
+    # sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA )
+    # sf.fill( pg.Color( 60, 130, 100, 96 ) )
     screen.blit( sf, (0, 0) )
-    text_surface = font_big.render( 'game over', True, (220,220,220) )
+    text_surface = font_big.render( 'you died', True, (220,220,220) )
     screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 20 ) )
 
 # game loop
-while pl.hp > 0 and running:
+while pl.hp > 0 and playing:
     for event in pg.event.get():
         # QUIT button
         if event.type == pg.QUIT:
-            running = False
+            playing = False
         # player controls
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_d or event.key == pg.K_RIGHT:
@@ -249,11 +318,11 @@ while pl.hp > 0 and running:
 
 
 # draw static images when game over
-while not pl.hp > 0 and running:
+while not pl.hp > 0 and playing:
     for event in pg.event.get():
         # QUIT button
         if event.type == pg.QUIT:
-            running = False
+            playing = False
 
     screen.blit( bg_img, ( 0, 0 ) )
     pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 140 )
