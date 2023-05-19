@@ -12,9 +12,9 @@ A little pygame-based game I made. Control a plane, shoot things, do not get sho
 - pygame
 - pygame_widgets
 
-A potential user probably already has python.
+The libraries can all be installed individually with `pip install <name_of_the_library>`.
 
-The libraries can all be installed individually with `pip install <name_of_the_library>`. Alternatively, `pip install requirements.txt` installs them all.
+Alternatively, `pip install -r requirements.txt` installs them all.
 
 To launch the game, do `python game.py`.
 
@@ -38,7 +38,9 @@ The player's plane can be controlled as follows:
 
 If the player is dead, the main menu can be instantly invoked by pressing `RETURN`, otherwise, it is displayed after 10 seconds.
 
-Four levels of difficulty can be selected in the main menu. These result in different number of enemies spawned.
+In the main menu, `RETURN` starts the game with current difficulty and `Q` quits the game.
+
+Four levels of difficulty can be selected in the main menu.
 
 Several pieces of useful information are displayed in the bottom right corner of the screen.
 
