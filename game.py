@@ -115,6 +115,11 @@ while running:
                 playing = False
                 controls = False
                 targets = False
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_RETURN:
+                    start_game()
+                if event.key == pg.K_q:
+                    quit_game()
             
         pw.update( pg.event.get() )
         pg.display.update()
