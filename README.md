@@ -6,11 +6,12 @@ A little pygame-based game I made. Control a plane, shoot things, do not get sho
 
 ### Dependencies
 
-- python 3
+- python 3.*, the newer, the better
 - numpy
 - pygame
+- pygame_widgets
 
-I sort of suppose a potential user already has python. The libraries can be installed simply with `pip install <name_of_the_library>`.
+I sort of suppose a potential user already has python. The libraries can all be installed simply with `pip install <name_of_the_library>`.
 
 ### Controls
 
@@ -30,9 +31,13 @@ So far, a plane can be controlled as follows:
 
 `L_SHIFT / R_SHIFT` to show/hide a crosshair for bombs
 
+If the player is dead, the main menu can be instantly invoked by pressing `SPACE` or `RETURN`, otherwise, it is displayed after five seconds.
+
+Four levels of difficulty can be selected in the main menu. These result in different number of enemies spawned.
+
 ### Mechanics
 
-The player, since it is a plane, is always moving forward, its direction can however be altered by `A` and `D`.
+The player, since it is a plane, is always moving forward, its direction can however be altered by `A` and `D`. The speed of the movement can be increased by `W` or decreased by `S`. The faster the movement, the slower the rotation and vice versa.
 
 The plaing field is bordered by what you can see on the screen, no more map loads if the player reaches the border. Instead, the player gets stuck in the direction of the border and depending on the angle between the player and the border, the player moves to the left or right. Rotation is still fully supported, so it is possible to return.
 
