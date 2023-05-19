@@ -19,7 +19,7 @@ class Player:
         self.size = 32
         self.max_hp = 5
         self.hp = self.max_hp
-        self.ammo = 100
+        self.ammo = 80
         self.bomb_cap = 5
         self.current_bombs = self.bomb_cap
         
