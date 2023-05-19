@@ -24,11 +24,13 @@ pg.mixer.init()
 running = True
 menu = True
 options = False
-playing = False
+playing = False # game or game-over screen running
+controls = False # the player still has ammunition
+targets = False # there are still targets to shoot
 DISPLAY_WIDTH = info.current_w
 DISPLAY_HEIGHT = info.current_h - 75
 score = 0
-DIFFICULTY = 0
+DIFFICULTY = None
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
@@ -44,11 +46,15 @@ sf.fill( pg.Color( 60, 130, 100, 96 ) ) # permanently camo green
 while running:
     # main menu functions
     def start_game():
-        global menu, playing, DIFFICULTY
+        global menu, playing, controls, targets, DIFFICULTY
         menu = False
         playing = True
-        if options_dropdown.getSelected() is not None:
-            DIFFICULTY = options_dropdown.getSelected()
+        controls = True
+        targets = True
+        if DIFFICULTY is not None:
+            if options_dropdown.getSelected() is not None:
+                DIFFICULTY = options_dropdown.getSelected()
+            else: DIFFICULTY = 1
         else: DIFFICULTY = 1
 
     def display_options():
@@ -57,10 +63,11 @@ while running:
         options = True
 
     def quit_game():
-        global running, menu, playing
+        global running, menu, playing, controls
         running = False
         menu = False
         playing = False
+        controls = False
 
     # main menu elements
     start_button = Button(
@@ -179,13 +186,20 @@ while running:
         ammo_surface = font_std.render( ammo_string, True, (220,220,220) )
         screen.blit( ammo_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-80 ) )
 
-    def display_over():
+    def display_over( mode ):
         screen.blit( sf, (0, 0) )
-        text_surface = font_big.render( 'you died', True, (220,220,220) )
-        screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 20 ) )
+        if mode == 0:
+            text_surface = font_big.render( 'you died', True, (220,220,220) )
+            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 20 ) )
+        elif mode == 1:
+            text_surface = font_big.render( 'out of ammo', True, (220,220,220) )
+            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 120, DISPLAY_HEIGHT/2 - 20 ) )
+        else:
+            text_surface = font_big.render( 'congratulations', True, (220,220,220) )
+            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 150, DISPLAY_HEIGHT/2 - 20 ) )
 
     # game loop
-    while pl.hp > 0 and playing:
+    while pl.hp > 0 and playing and controls and targets:
         for event in pg.event.get():
             # QUIT button
             if event.type == pg.QUIT:
@@ -230,18 +244,19 @@ while running:
                         zep.hit()
                         bullets.remove( blt )
                         if zep.dead is True:
+                            airships.remove( zep )
                             explosions.append( Explosion( zep.x, zep.y, screen ) )
                             explosion_sound.play()
                             score += 30
 
         for zep in airships:
-            if not zep.dead:
-                if pg.Rect.colliderect( zep.rect, pl.get_rect() ):
-                    zep.kill()
-                    score += 20
-                    explosions.append( Explosion( zep.x, zep.y, screen ) )
-                    explosion_sound.play()
-                    pl.hp = np.maximum( pl.hp-2, 0 )
+            if pg.Rect.colliderect( zep.rect, pl.get_rect() ):
+                zep.kill()
+                airships.remove( zep )
+                score += 20
+                explosions.append( Explosion( zep.x, zep.y, screen ) )
+                explosion_sound.play()
+                pl.hp = np.maximum( pl.hp-2, 0 )
 
         for bmb in bombs:
             if bmb.period < 200:
@@ -255,6 +270,7 @@ while running:
                 for en in enemies:
                     if not en.dead and pg.Rect.colliderect( expl.rect, en.rect ):
                         en.kill()
+                        enemies.remove( en )
                         score += 500
                         explosions.append( Explosion( en.position[ 0 ] - en.size/2,
                                                     en.position[ 1 ] - en.size/2,
@@ -274,13 +290,12 @@ while running:
 
         # enemy handling
         for en in enemies:
-            if not en.dead:
-                en.check_change()
-                en.update()
-                if en.correct_aim() and time() > last_shot + en.cooldown:
-                    enemy_bullets.append( Enemy_bullet( screen, en ) )
-                    bullet_sound.play()
-                    last_shot = time()
+            en.check_change()
+            en.update()
+            if en.correct_aim() and time() > last_shot + en.cooldown:
+                enemy_bullets.append( Enemy_bullet( screen, en ) )
+                bullet_sound.play()
+                last_shot = time()
 
         for blt in enemy_bullets:
             blt.position += blt.delta * blt.increment
@@ -293,14 +308,11 @@ while running:
         screen.blit( bg_img, ( 0, 0 ) )
         pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 140 )
         pl.draw_bombs( full_bomb_img, empty_bomb_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 110 )
-        for en in enemies:
-            if not en.dead: en.draw()
+        for en in enemies: en.draw()
         if not carrier.dead: carrier.draw()
-        if carrier.hp == 1:
-            carrier.draw_flames()
+        if carrier.hp == 1: carrier.draw_flames()
         for bmb in bombs: bmb.draw()
-        for zep in airships:
-            if not zep.dead: zep.draw()
+        for zep in airships: zep.draw()
         if crosshair.visible: crosshair.draw()
         for blt in bullets: blt.draw()
         for blt in enemy_bullets: blt.draw()
@@ -312,6 +324,9 @@ while running:
         display_score()
         display_stats()
 
+        if pl.current_bombs == 0 and pl.ammo == 0: controls = False
+        if not enemies and not airships and carrier.dead: targets = False
+
         # beware
         # the very end of the loop
         pg.display.update()
@@ -320,7 +335,7 @@ while running:
     # post-game menu stuff
     death_time = time()
     # draw static images when game over
-    while not pl.hp > 0 and playing:
+    while playing and (not pl.hp > 0 or not targets or not controls):
         for event in pg.event.get():
             # QUIT button
             if event.type == pg.QUIT:
@@ -328,7 +343,7 @@ while running:
                 menu = False
                 playing = False
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE or event.key == pg.K_RETURN:
+                if event.key == pg.K_RETURN:
                     death_time = 0
 
         screen.blit( bg_img, ( 0, 0 ) )
@@ -349,7 +364,10 @@ while running:
             if not en.dead: en.draw()
         display_score()
         display_stats()
-        if time() < death_time + 5: display_over()
+        if time() < death_time + 10:
+            if not pl.hp > 0: display_over( 0 )
+            if not controls: display_over( 1 )
+            if not targets: display_over( 2 )
         else:
             playing = False
             menu = True
