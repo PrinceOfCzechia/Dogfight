@@ -31,7 +31,7 @@ So far, a plane can be controlled as follows:
 
 `L_SHIFT / R_SHIFT` to show/hide a crosshair for bombs
 
-If the player is dead, the main menu can be instantly invoked by pressing `SPACE` or `RETURN`, otherwise, it is displayed after five seconds.
+If the player is dead, the main menu can be instantly invoked by pressing `RETURN`, otherwise, it is displayed after 10 seconds.
 
 Four levels of difficulty can be selected in the main menu. These result in different number of enemies spawned.
 
