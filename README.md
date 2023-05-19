@@ -35,6 +35,10 @@ If the player is dead, the main menu can be instantly invoked by pressing `RETUR
 
 Four levels of difficulty can be selected in the main menu. These result in different number of enemies spawned.
 
+Several pieces of useful information are displayed in the bottom right corner of the screen.
+
+![Stats display](assets/stats_demo.png)
+
 ### Mechanics
 
 The player, since it is a plane, is always moving forward, its direction can however be altered by `A` and `D`. The speed of the movement can be increased by `W` or decreased by `S`. The faster the movement, the slower the rotation and vice versa.
@@ -43,7 +47,7 @@ The plaing field is bordered by what you can see on the screen, no more map load
 
 Several airships are spawned with random coordinates and rotation. Once hit five times by a player's bullet, they explode. If the player crashes into an airship, the airship explodes as well, the player loses 2 HP (out of 5).
 
-The amount of bullets is capped at 100, when all bullets are shot, the `SPACE` key plays the sound of an empty gun. Similarly, the bombs are capped at 5.
+The amount of bullets is capped at 100, 80, 60 or 50, depending on selected difficulty, when all bullets are shot, the `SPACE` key plays the sound of an empty gun. Similarly, the bombs are capped at 5.
 
 Other than crashing into airships, the player can lose HP by getting shot by an enemy anti-aircraft gun as well. Each shot is worth 1 HP. According to difficulty, which is currently hardcoded, there can be 0, 1, 2 or 3 anti-aircraft guns.
 
