@@ -10,8 +10,6 @@ class Player:
         self.angle = 270.0
         self.position = np.array( [ self.x, self.y ] )
         self.center = self.position + 16
-        self.rot_matrix = np.array( [[ np.cos(self.angle*np.pi/180), -np.sin(self.angle*np.pi/180) ],
-                                     [ np.sin(self.angle*np.pi/180), np.cos(self.angle*np.pi/180) ]] )
         self.speed = 0.6
         self.max_speed = 0.8
         self.min_speed = 0.4
@@ -29,7 +27,7 @@ class Player:
         rot_angle = 270 - self.angle
         rotated = pg.transform.rotate( self.img, rot_angle )
         self.screen.blit( rotated, ( self.position[ 0 ], self.position[ 1 ] ) )
-        # pg.draw.rect( self.screen, [255,0,0], self.get_rect() )
+        pg.draw.rect( self.screen, [255,0,0], self.get_rect() )
 
     def increment_speed( self ):
         if self.speed < self.max_speed: self.speed += self.speed_increment
@@ -49,7 +47,7 @@ class Player:
         else: return 0.33
 
     def get_rect( self ):
-        return pg.Rect( self.center, ( self.size - 4, self.size - 4 ) )
+        return pg.Rect( self.position + 4, ( self.size - 4, self.size - 4 ) )
     
     def draw_hearts( self, full: pg.image, empty: pg.image, x_coordinate, y_coordinate ):
         for i in range( self.hp ):
@@ -73,9 +71,7 @@ class Player:
         a = self.angle
         s = self.speed
         self.position += self.delta
-        self.center = self.position + 8 * np.dot( self.delta, self.rot_matrix )
+        self.center = self.position + 16
         self.delta[ 0 ] = s * np.cos( a * np.pi / 180 )
         self.delta[ 1 ] = s * np.sin( a * np.pi / 180 )
         self.angle += self.rotation
-        self.rot_matrix = np.array( [[ np.cos(a*np.pi/180), -np.sin(a*np.pi/180) ],
-                                     [ np.sin(a*np.pi/180), np.cos(a*np.pi/180) ]] )
