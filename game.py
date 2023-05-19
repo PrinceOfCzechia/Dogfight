@@ -43,7 +43,12 @@ pg.display.set_caption( 'DogeFight' )
 sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA ) # surface to fill menu screen
 sf.fill( pg.Color( 60, 130, 100, 96 ) ) # permanently camo green
 
+# background music
+pg.mixer.music.load( 'assets/bg_music.wav' )
+pg.mixer.music.set_volume( 0.3 )
+
 while running:
+    pg.mixer.music.play( -1, 0.0, 0 )
     # main menu functions
     def start_game():
         global menu, playing, controls, targets, DIFFICULTY
@@ -163,11 +168,6 @@ while running:
 
     # crosshair
     crosshair = Crosshair( pl, screen )
-
-    # background music
-    pg.mixer.music.load( 'assets/bg_music.wav' )
-    pg.mixer.music.set_volume( 0.3 )
-    pg.mixer.music.play( -1, 0.0, 0 )
 
 
     # write things
