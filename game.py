@@ -116,10 +116,10 @@ while running:
 
     # enemy
     enemies: List[ Enemy ] = []
-    enemy_x1 = DISPLAY_WIDTH / 4
-    enemy_x2 = DISPLAY_WIDTH * 4 / 9
-    enemy_y1 = DISPLAY_HEIGHT / 4
-    enemy_y2 = DISPLAY_HEIGHT * 3 / 4
+    enemy_x1 = DISPLAY_WIDTH / 4 + rn.randint( -20, 20 )
+    enemy_x2 = DISPLAY_WIDTH * 4 / 9 + rn.randint( -20, 20 )
+    enemy_y1 = DISPLAY_HEIGHT / 4 + rn.randint( -20, 20 )
+    enemy_y2 = DISPLAY_HEIGHT * 3 / 4 + rn.randint( -20, 20 )
     if DIFFICULTY > 0: enemies.append( Enemy( enemy_x1, enemy_y1, screen, pl ) )
     if DIFFICULTY > 1: enemies.append( Enemy( enemy_x1, enemy_y2, screen, pl ) )
     if DIFFICULTY > 2: enemies.append( Enemy( enemy_x2, enemy_y1, screen, pl ) )
