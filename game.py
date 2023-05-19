@@ -318,22 +318,6 @@ while running:
 
 
     # post-game menu stuff
-    def back_to_menu():
-        global menu, playing
-        playing = False
-        menu = True
-
-    quit_button = Button(
-        screen,
-        DISPLAY_WIDTH/3, DISPLAY_HEIGHT*6/16,
-        DISPLAY_WIDTH/3, DISPLAY_HEIGHT/8,
-        text = 'Back to menu',
-        font = font_big, textColour = ( 230, 230, 230 ),
-        margin = 20, radius = 5,
-        inactiveColour = ( 40, 110, 80 ), hoverColour = ( 20, 20, 20 ),
-        onClick = lambda: back_to_menu()
-    )
-
     death_time = time()
     # draw static images when game over
     while not pl.hp > 0 and playing:
@@ -343,6 +327,9 @@ while running:
                 running = False
                 menu = False
                 playing = False
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE or event.key == pg.K_RETURN:
+                    death_time = 0
 
         screen.blit( bg_img, ( 0, 0 ) )
         pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 140 )
@@ -363,7 +350,9 @@ while running:
         display_score()
         display_stats()
         if time() < death_time + 5: display_over()
-        else: pw.update( pg.event.get() )
+        else:
+            playing = False
+            menu = True
 
         pg.display.update()
     
