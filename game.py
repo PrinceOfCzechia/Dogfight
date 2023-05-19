@@ -38,8 +38,8 @@ screen = pg.display.set_mode( ( DISPLAY_WIDTH, DISPLAY_HEIGHT ) )
 icon = pg.image.load( 'assets/joystick.png' )
 pg.display.set_icon( icon )
 pg.display.set_caption( 'DogeFight' )
-sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA )
-sf.fill( pg.Color( 60, 130, 100, 96 ) )
+sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA ) # surface to fill menu screen
+sf.fill( pg.Color( 60, 130, 100, 96 ) ) # permanently camo green
 
 while running:
     # main menu functions
@@ -102,6 +102,7 @@ while running:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
+                menu = False
             
         pw.update( pg.event.get() )
         pg.display.update()
@@ -179,8 +180,6 @@ while running:
         screen.blit( ammo_surface, ( DISPLAY_WIDTH-120, DISPLAY_HEIGHT-80 ) )
 
     def display_over():
-        # sf = pg.Surface( (DISPLAY_WIDTH, DISPLAY_HEIGHT), pg.SRCALPHA )
-        # sf.fill( pg.Color( 60, 130, 100, 96 ) )
         screen.blit( sf, (0, 0) )
         text_surface = font_big.render( 'you died', True, (220,220,220) )
         screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 20 ) )
@@ -318,7 +317,24 @@ while running:
         pg.display.update()
 
 
+    # post-game menu stuff
+    def back_to_menu():
+        global menu, playing
+        playing = False
+        menu = True
 
+    quit_button = Button(
+        screen,
+        DISPLAY_WIDTH/3, DISPLAY_HEIGHT*6/16,
+        DISPLAY_WIDTH/3, DISPLAY_HEIGHT/8,
+        text = 'Back to menu',
+        font = font_big, textColour = ( 230, 230, 230 ),
+        margin = 20, radius = 5,
+        inactiveColour = ( 40, 110, 80 ), hoverColour = ( 20, 20, 20 ),
+        onClick = lambda: back_to_menu()
+    )
+
+    death_time = time()
     # draw static images when game over
     while not pl.hp > 0 and playing:
         for event in pg.event.get():
@@ -346,7 +362,8 @@ while running:
             if not en.dead: en.draw()
         display_score()
         display_stats()
-        display_over()
+        if time() < death_time + 5: display_over()
+        else: pw.update( pg.event.get() )
 
         pg.display.update()
     
