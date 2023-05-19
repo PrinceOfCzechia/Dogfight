@@ -8,7 +8,6 @@ A little pygame-based game I made. Control a plane, shoot things, do not get sho
 
 - python 3.*, the newer, the better
 - numpy
-- typing
 - pygame
 - pygame_widgets
 
