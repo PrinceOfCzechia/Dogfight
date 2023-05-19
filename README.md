@@ -8,16 +8,19 @@ A little pygame-based game I made. Control a plane, shoot things, do not get sho
 
 - python 3.*, the newer, the better
 - numpy
+- typing
 - pygame
 - pygame_widgets
 
-I sort of suppose a potential user already has python. The libraries can all be installed simply with `pip install <name_of_the_library>`.
+A potential user probably already has python.
+
+The libraries can all be installed individually with `pip install <name_of_the_library>`. Alternatively, `pip install requirements.txt` installs them all.
 
 To launch the game, do `python game.py`.
 
 ### Controls
 
-So far, a plane can be controlled as follows:
+The player's plane can be controlled as follows:
 
 `A / LEFT` to turn left
 
