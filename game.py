@@ -56,11 +56,8 @@ while running:
         playing = True
         controls = True
         targets = True
-        if DIFFICULTY is not None:
-            if options_dropdown.getSelected() is not None:
-                DIFFICULTY = options_dropdown.getSelected()
-            else: DIFFICULTY = 1
-        else: DIFFICULTY = 1
+        DIFFICULTY = options_dropdown.getSelected()
+        if DIFFICULTY is None: DIFFICULTY = 1
 
     def display_options():
         global options, menu
@@ -115,6 +112,9 @@ while running:
             if event.type == pg.QUIT:
                 running = False
                 menu = False
+                playing = False
+                controls = False
+                targets = False
             
         pw.update( pg.event.get() )
         pg.display.update()
@@ -125,6 +125,10 @@ while running:
     pl = Player( player_x, player_y, screen )
     full_heart_img = pg.image.load( 'assets/full_heart.png' )
     empty_heart_img = pg.image.load( 'assets/empty_heart.png' )
+    if DIFFICULTY == 0: pl.ammo = 100
+    elif DIFFICULTY == 1: pl.ammo = 80
+    elif DIFFICULTY == 2: pl.ammo = 60
+    else: pl.ammo = 50
 
     # enemy
     enemies: List[ Enemy ] = []
@@ -190,20 +194,26 @@ while running:
         screen.blit( sf, (0, 0) )
         if mode == 0:
             text_surface = font_big.render( 'you died', True, (220,220,220) )
-            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 20 ) )
+            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 40 ) )
         elif mode == 1:
             text_surface = font_big.render( 'out of ammo', True, (220,220,220) )
-            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 120, DISPLAY_HEIGHT/2 - 20 ) )
+            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 120, DISPLAY_HEIGHT/2 - 40 ) )
         else:
             text_surface = font_big.render( 'congratulations', True, (220,220,220) )
-            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 150, DISPLAY_HEIGHT/2 - 20 ) )
+            screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 150, DISPLAY_HEIGHT/2 - 40 ) )
+        score_surface = font_std.render( 'score: ' + str(score), True, (220, 220, 220) )
+        screen.blit( score_surface, ( DISPLAY_WIDTH/2 - 40, DISPLAY_HEIGHT/2 + 40 ) )
 
     # game loop
     while pl.hp > 0 and playing and controls and targets:
         for event in pg.event.get():
             # QUIT button
             if event.type == pg.QUIT:
+                running = False
+                menu = False
                 playing = False
+                controls = False
+                targets = False
             # player controls
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_d or event.key == pg.K_RIGHT:
@@ -349,11 +359,9 @@ while running:
         screen.blit( bg_img, ( 0, 0 ) )
         pl.draw_hearts( full_heart_img, empty_heart_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 140 )
         pl.draw_bombs( full_bomb_img, empty_bomb_img, DISPLAY_WIDTH - 40, DISPLAY_HEIGHT - 110 )
-        for zep in airships:
-            if not zep.dead: zep.draw()
-            if not carrier.dead: carrier.draw()
-        if carrier.hp == 1:
-            carrier.draw_flames()
+        for zep in airships: zep.draw()
+        if not carrier.dead: carrier.draw()
+        if carrier.hp == 1: carrier.draw_flames()
         for blt in bullets: blt.draw()
         for expl in explosions:
             if expl.visible:
