@@ -381,4 +381,6 @@ while running:
             menu = True
 
         pg.display.update()
+
+    score = 0
     
