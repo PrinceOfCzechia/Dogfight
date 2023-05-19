@@ -13,6 +13,8 @@ A little pygame-based game I made. Control a plane, shoot things, do not get sho
 
 I sort of suppose a potential user already has python. The libraries can all be installed simply with `pip install <name_of_the_library>`.
 
+To launch the game, do `python game.py`.
+
 ### Controls
 
 So far, a plane can be controlled as follows:
@@ -41,7 +43,7 @@ Several pieces of useful information are displayed in the bottom right corner of
 
 ### Mechanics
 
-The player, since it is a plane, is always moving forward, its direction can however be altered by `A` and `D`. The speed of the movement can be increased by `W` or decreased by `S`. The faster the movement, the slower the rotation and vice versa.
+The player, since it is a plane, is always moving forward, its direction can however be altered by `A` and `D`. The speed of the player's movement can be increased by `W` or decreased by `S`. The faster the movement, the slower the rotation and vice versa. The movement speed changes by 50 and has values between 400 and 800.
 
 The plaing field is bordered by what you can see on the screen, no more map loads if the player reaches the border. Instead, the player gets stuck in the direction of the border and depending on the angle between the player and the border, the player moves to the left or right. Rotation is still fully supported, so it is possible to return.
 
