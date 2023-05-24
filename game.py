@@ -108,7 +108,8 @@ while running:
     # main menu loop
     while menu:
         screen.blit( sf, (0, 0) )
-        for event in pg.event.get():
+        events = pg.event.get()
+        for event in events:
             if event.type == pg.QUIT:
                 running = False
                 menu = False
@@ -121,7 +122,7 @@ while running:
                 if event.key == pg.K_q:
                     quit_game()
             
-        pw.update( pg.event.get() )
+        pw.update( events )
         pg.display.update()
     # menu loop ends here
 
@@ -214,7 +215,8 @@ while running:
 
     # game loop
     while playing and pl.hp > 0 and controls and targets:
-        for event in pg.event.get():
+        events = pg.event.get()
+        for event in events:
             # QUIT button
             if event.type == pg.QUIT:
                 running = False
@@ -356,7 +358,8 @@ while running:
     death_time = time()
     # draw static images when game over
     while playing and (not pl.hp > 0 or not targets or not controls):
-        for event in pg.event.get():
+        events = pg.event.get()
+        for event in events:
             # QUIT button
             if event.type == pg.QUIT:
                 running = False
