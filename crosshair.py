@@ -5,7 +5,7 @@ from player import Player
 class Crosshair:
     def __init__( self, player: Player, screen ):
         self.player = player
-        self.position = player.position + 150 * player.delta
+        self.position = player.center + 150 * player.delta
         self.img = pg.image.load( 'assets/crosshair.png' )
         self.visible = False
         self.screen = screen
@@ -17,4 +17,4 @@ class Crosshair:
         self.screen.blit( self.img, self.position )
 
     def update( self ):
-        self.position = self.player.position + 150 * self.player.delta
+        self.position = self.player.center + 150 * self.player.delta
