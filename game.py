@@ -19,23 +19,23 @@ from enemy_bullet import Enemy_bullet
 pg.init()
 
 # environemnent
-info = pg.display.Info()
-pg.mixer.init()
+info = pg.display.Info() # to setup screen width and height
+DISPLAY_WIDTH = info.current_w
+DISPLAY_HEIGHT = info.current_h - 75
+pg.mixer.init() # init sound effects
 running = True
 menu = True
 options = False
 playing = False # game or game-over screen running
 controls = False # the player still has ammunition
 targets = False # there are still targets to shoot
-DISPLAY_WIDTH = info.current_w
-DISPLAY_HEIGHT = info.current_h - 75
 score = 0
 DIFFICULTY = None
 font_std = pg.font.Font('assets/font.ttf', 25 )
 font_big = pg.font.Font('assets/font.ttf', 80 )
 bg_img = pg.transform.scale( pg.image.load( 'assets/background.jpg' ), ( info.current_w, info.current_h ) )
 
-# display size, name, icon
+# display name, icon, screen fill
 screen = pg.display.set_mode( ( DISPLAY_WIDTH, DISPLAY_HEIGHT ) )
 icon = pg.image.load( 'assets/joystick.png' )
 pg.display.set_icon( icon )
@@ -123,6 +123,7 @@ while running:
             
         pw.update( pg.event.get() )
         pg.display.update()
+    # menu loop ends here
 
     # player
     player_x = DISPLAY_WIDTH/2 + rn.randint( -200, 200 )
@@ -179,9 +180,9 @@ while running:
     crosshair = Crosshair( pl, screen )
 
 
-    # write things
+    # functions to write things
     def display_score():
-        score_string = 'score: ' + str(score)
+        score_string = 'score: ' + str( score )
         text_surface = font_std.render( score_string, True, (220,220,220) )
         screen.blit( text_surface, ( 20, 10 ) )
 
@@ -197,6 +198,7 @@ while running:
 
     def display_over( mode ):
         screen.blit( sf, (0, 0) )
+        #three possible causes of game over
         if mode == 0:
             text_surface = font_big.render( 'you died', True, (220,220,220) )
             screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 100, DISPLAY_HEIGHT/2 - 40 ) )
@@ -206,11 +208,12 @@ while running:
         else:
             text_surface = font_big.render( 'congratulations', True, (220,220,220) )
             screen.blit( text_surface, ( DISPLAY_WIDTH/2 - 150, DISPLAY_HEIGHT/2 - 40 ) )
+        # score
         score_surface = font_std.render( 'score: ' + str(score), True, (220, 220, 220) )
         screen.blit( score_surface, ( DISPLAY_WIDTH/2 - 40, DISPLAY_HEIGHT/2 + 40 ) )
 
     # game loop
-    while pl.hp > 0 and playing and controls and targets:
+    while playing and pl.hp > 0 and controls and targets:
         for event in pg.event.get():
             # QUIT button
             if event.type == pg.QUIT:
@@ -221,6 +224,7 @@ while running:
                 targets = False
             # player controls
             if event.type == pg.KEYDOWN:
+                # movement
                 if event.key == pg.K_d or event.key == pg.K_RIGHT:
                     pl.rotation += pl.get_rotation_increment()
                 if event.key ==pg.K_a or event.key == pg.K_LEFT:
@@ -229,6 +233,7 @@ while running:
                     pl.increment_speed()
                 if event.key == pg.K_s or event.key == pg.K_DOWN:
                     pl.decrement_speed()
+                # shooting
                 if event.key == pg.K_SPACE:
                     if pl.ammo > 0:
                         blt = Bullet( screen, pl )
@@ -252,7 +257,7 @@ while running:
                     pl.rotation = 0
 
         for blt in bullets:
-            blt.position += blt.delta * blt.increment
+            blt.position += blt.delta * blt.speed
             for zep in airships:
                 if not zep.dead:
                     if pg.Rect.colliderect( blt.get_rect(), zep.rect ):
@@ -357,6 +362,7 @@ while running:
                 running = False
                 menu = False
                 playing = False
+            # return to menu
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_RETURN:
                     death_time = 0
@@ -378,14 +384,14 @@ while running:
         display_score()
         display_stats()
         if time() < death_time + 10:
-            if not pl.hp > 0: display_over( 0 )
-            if not controls: display_over( 1 )
-            if not targets: display_over( 2 )
-        else:
+            if not pl.hp > 0: display_over( 0 ) # player died
+            if not controls: display_over( 1 ) # out of ammo
+            if not targets: display_over( 2 ) # all targets destroyed
+        else: # switch back to menu
             playing = False
             menu = True
 
-        pg.display.update()
+        pg.display.update() # post-game loop ends
 
-    score = 0
+    score = 0 # reset score for next game
     
